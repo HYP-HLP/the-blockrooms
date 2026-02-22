@@ -1,0 +1,10 @@
+{
+    "music.bl0": {
+        "sounds": [
+            {
+                "name": "music/menu/beginning_2",
+                "stream": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "itemGroup.blockrooms": "块室",
+  "item.blockrooms.almond_milk_bucket": "杏仁奶桶",
+  "item.blockrooms.ruby": "块室红宝石",
+  "item.blockrooms.ruby_sword": "块室红宝石剑",
+  "item.blockrooms.ruby_shovel": "块室红宝石锹",
+  "item.blockrooms.ruby_pickaxe": "块室红宝石镐",
+  "item.blockrooms.ruby_axe": "块室红宝石斧",
+  "item.blockrooms.ruby_hoe": "块室红宝石锄",
+
+  "blockrooms.configuration.title": "块室模组配置",
+  "blockrooms.configuration.section.blockrooms.common.toml": "配置块室模组",
+  "blockrooms.configuration.section.blockrooms.common.toml.title": "配置块室模组",
+  "blockrooms.configuration.items": "物品列表",
+  "blockrooms.configuration.ruby_trans_time": "块室红宝石同化时间",
+  "blockrooms.configuration.ruby_trans_time_comment": "块室红宝石同化其周围的绿宝石所需要的时间（单位：游戏刻）"
+}

@@ -1,0 +1,134 @@
+package name.blockrooms.world.generator;
+
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.blending.Blender;
+
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+
+public class BlockLevel0Generator extends ChunkGenerator {
+    public static final MapCodec<BlockLevel0Generator> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    BiomeSource.CODEC.fieldOf("biome_source").forGetter(BlockLevel0Generator::getBiomeSource)
+            ).apply(instance, BlockLevel0Generator::new)
+    );
+
+    public BlockLevel0Generator(BiomeSource biomeSource) {
+        super(biomeSource);
+    }
+
+    @Override
+    protected MapCodec<? extends ChunkGenerator> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int worldX = chunk.getPos().getMinBlockX() + x;
+                int worldZ = chunk.getPos().getMinBlockZ() + z;
+
+                for (int y = this.getMinY(); y <= this.getGenDepth(); y++) {
+                    if (y >= 0 && y <= 4) continue;
+                    chunk.setBlockState(new BlockPos(x, y, z), Blocks.BEDROCK.defaultBlockState(), 0);
+                }
+                chunk.setBlockState(new BlockPos(x, 0, z), Blocks.OAK_PLANKS.defaultBlockState(), Block.UPDATE_CLIENTS);
+
+                if (new Random().nextDouble() <= 0.36) {
+                    for (int y = 1; y <= 4; y++) {
+                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    }
+                }
+                else {
+                    chunk.setBlockState(new BlockPos(x, 1, z), Blocks.BROWN_CARPET.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+
+                    /*
+                if (router.finalDensity().compute(new DensityFunction.SinglePointContext(worldX, y, worldZ)) > 0) {
+                    for (int y = 1; y <= 4; y++) {
+                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    }
+                }
+                else {
+                    chunk.setBlockState(new BlockPos(x, 1, z), Blocks.BROWN_CARPET.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+                     */
+
+                if ((worldX % 5 + 5) % 5 < 2 && (worldZ % 2 + 2) % 2 == 0) {
+                    chunk.setBlockState(new BlockPos(x, 5, z), Blocks.REDSTONE_LAMP.defaultBlockState().setValue(RedstoneLampBlock.LIT, true), Block.UPDATE_ALL);
+                    chunk.setBlockState(new BlockPos(x, 6, z), Blocks.REDSTONE_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
+                }
+                else {
+                    chunk.setBlockState(new BlockPos(x, 5, z), Blocks.STONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(chunk);
+    }
+
+    @Override
+    public void applyCarvers(WorldGenRegion worldGenRegion, long l, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess) {
+
+    }
+
+    @Override
+    public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
+
+    }
+
+    @Override
+    public void spawnOriginalMobs(WorldGenRegion worldGenRegion) {
+
+    }
+
+    @Override
+    public int getGenDepth() {
+        return 384;
+    }
+
+    @Override
+    public int getSeaLevel() {
+        return 0;
+    }
+
+    @Override
+    public int getMinY() {
+        return -64;
+    }
+
+    @Override
+    public int getBaseHeight(int i, int i1, Heightmap.Types types, LevelHeightAccessor levelHeightAccessor, RandomState randomState) {
+        return 0;
+    }
+
+    @Override
+    public NoiseColumn getBaseColumn(int i, int i1, LevelHeightAccessor levelHeightAccessor, RandomState randomState) {
+        return null;
+    }
+
+    @Override
+    public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
+        list.add("x: " + blockPos.getX() + "; y: " + blockPos.getY() + "; z: " + blockPos.getZ()
+                + "; density: " + randomState.router().finalDensity().compute(new DensityFunction.SinglePointContext(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                + "; continents: " + randomState.router().continents().compute(new DensityFunction.SinglePointContext(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+        );
+    }
+
+
+}

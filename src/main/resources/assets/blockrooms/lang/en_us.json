@@ -1,0 +1,17 @@
+{
+  "itemGroup.blockrooms": "The Blockrooms",
+  "item.blockrooms.almond_milk_bucket": "Almond Milk Bucket",
+  "item.blockrooms.ruby": "Blockrooms Ruby",
+  "item.blockrooms.ruby_sword": "Blockrooms Ruby Sword",
+  "item.blockrooms.ruby_shovel": "Blockrooms Ruby Shovel",
+  "item.blockrooms.ruby_pickaxe": "Blockrooms Ruby Pickaxe",
+  "item.blockrooms.ruby_axe": "Blockrooms Ruby Axe",
+  "item.blockrooms.ruby_hoe": "Blockrooms Ruby Hoe",
+
+  "blockrooms.configuration.title": "The Blockrooms Configs",
+  "blockrooms.configuration.section.blockrooms.common.toml": "The Blockrooms Configs",
+  "blockrooms.configuration.section.blockrooms.common.toml.title": "The Blockrooms Configs",
+  "blockrooms.configuration.items": "Item List",
+  "blockrooms.configuration.ruby_trans_time": "Ruby Transforming Time",
+  "blockrooms.configuration.ruby_trans_time_comment": "The time required for emerald transform to blockrooms ruby"
+}
