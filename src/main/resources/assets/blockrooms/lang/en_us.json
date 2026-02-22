@@ -7,7 +7,9 @@
   "item.blockrooms.ruby_pickaxe": "Blockrooms Ruby Pickaxe",
   "item.blockrooms.ruby_axe": "Blockrooms Ruby Axe",
   "item.blockrooms.ruby_hoe": "Blockrooms Ruby Hoe",
+  "item.blockrooms.ruby_spare": "Blockrooms Ruby Spare",
 
+  "blockrooms.music.menu.beginning": "C418 - Beginning",
   "blockrooms.configuration.title": "The Blockrooms Configs",
   "blockrooms.configuration.section.blockrooms.common.toml": "The Blockrooms Configs",
   "blockrooms.configuration.section.blockrooms.common.toml.title": "The Blockrooms Configs",

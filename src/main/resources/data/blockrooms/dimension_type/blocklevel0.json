@@ -5,7 +5,7 @@
             "default": {
                 "max_delay": 24000,
                 "min_delay": 12000,
-                "sound": "minecraft:music.menu"
+                "sound": "blockrooms:music.beginning"
             }
         },
         "minecraft:gameplay/bed_rule": {

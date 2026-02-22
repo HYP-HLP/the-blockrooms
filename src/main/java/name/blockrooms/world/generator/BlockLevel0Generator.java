@@ -50,7 +50,7 @@ public class BlockLevel0Generator extends ChunkGenerator {
                 }
                 chunk.setBlockState(new BlockPos(x, 0, z), Blocks.OAK_PLANKS.defaultBlockState(), Block.UPDATE_CLIENTS);
 
-                if (new Random().nextDouble() <= 0.36) {
+                if (new Random().nextDouble() <= 0.3) {
                     for (int y = 1; y <= 4; y++) {
                         chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
                     }

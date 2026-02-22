@@ -3,6 +3,7 @@ package name.blockrooms;
 import name.blockrooms.event.RubyTransHandler;
 import name.blockrooms.item.ModCreativeModeTabs;
 import name.blockrooms.item.ModItems;
+import name.blockrooms.sounds.ModSounds;
 import name.blockrooms.world.generator.ModGenerators;
 import org.slf4j.Logger;
 
@@ -45,6 +46,7 @@ public class Blockrooms {
         //ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
+        ModSounds.register(modEventBus);
         ModGenerators.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us

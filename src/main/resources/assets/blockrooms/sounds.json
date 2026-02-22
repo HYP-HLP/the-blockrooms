@@ -1,6 +1,10 @@
 {
-    "music.bl0": {
+    "music.beginning": {
         "sounds": [
+            {
+                "name": "blockrooms:music/menu/beginning",
+                "stream": true
+            },
             {
                 "name": "music/menu/beginning_2",
                 "stream": true

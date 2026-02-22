@@ -7,6 +7,7 @@
   "item.blockrooms.ruby_pickaxe": "块室红宝石镐",
   "item.blockrooms.ruby_axe": "块室红宝石斧",
   "item.blockrooms.ruby_hoe": "块室红宝石锄",
+  "item.blockrooms.ruby_spare": "块室红宝石矛",
 
   "blockrooms.configuration.title": "块室模组配置",
   "blockrooms.configuration.section.blockrooms.common.toml": "配置块室模组",
