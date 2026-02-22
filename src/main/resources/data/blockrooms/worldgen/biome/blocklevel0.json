@@ -1,6 +1,9 @@
 {
     "attributes": {
-        "minecraft:visual/sky_color": "#77643d"
+        "minecraft:visual/sky_color": "#77643d",
+        "minecraft:audio/ambient_sounds": {
+            "loop": "minecraft:block.piston.contract"
+        }
     },
     "carvers": [],
     "downfall": 0.4,

@@ -23,7 +23,7 @@
         "minecraft:visual/sky_color": "#77643d"
     },
     "coordinate_scale": 1.0,
-    "has_ceiling": false,
+    "has_ceiling": true,
     "has_skylight": true,
     "height": 384,
     "infiniburn": "#minecraft:infiniburn_overworld",
@@ -35,5 +35,6 @@
         "max_inclusive": 7,
         "min_inclusive": 0
     },
+    "skybox": "none",
     "timelines": "#minecraft:in_overworld"
 }
