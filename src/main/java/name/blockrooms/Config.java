@@ -1,17 +1,8 @@
 package name.blockrooms;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
@@ -40,7 +31,7 @@ public class Config {
      */
 
     public static final ModConfigSpec.IntValue RUBY_TRANS_TIME = BUILDER
-            .comment(String.valueOf(Component.translatable("blockrooms.configuration.ruby_trans_time_comment")))
+            .comment(Component.translatable("blockrooms.configuration.ruby_trans_time_comment").toString())
             .defineInRange("ruby_trans_time", 60 * 20, 0, Integer.MAX_VALUE);
 
     static final ModConfigSpec SPEC = BUILDER.build();

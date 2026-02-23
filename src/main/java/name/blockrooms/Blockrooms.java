@@ -1,5 +1,6 @@
 package name.blockrooms;
 
+import name.blockrooms.block.ModBlocks;
 import name.blockrooms.event.RubyTransHandler;
 import name.blockrooms.item.ModCreativeModeTabs;
 import name.blockrooms.item.ModItems;
@@ -43,7 +44,7 @@ public class Blockrooms {
         modEventBus.addListener(this::commonSetup);
 
         // Register the Deferred Registers to the mod event bus so things get registered
-        //ModBlocks.register(modEventBus);
+        ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         ModSounds.register(modEventBus);

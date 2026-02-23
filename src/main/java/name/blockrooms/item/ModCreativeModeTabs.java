@@ -23,6 +23,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.RUBY_PICKAXE);
                         output.accept(ModItems.RUBY_AXE);
                         output.accept(ModItems.RUBY_HOE);
+                        output.accept(ModItems.RUBY_SPEAR);
+                        output.accept(ModItems.HEATED_IRON_BLOCK);
                     })
                     .build());
     public static void register(IEventBus eventBus) {

@@ -1,9 +1,11 @@
 package name.blockrooms.item;
 
 import name.blockrooms.Blockrooms;
+import name.blockrooms.block.ModBlocks;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumables;
@@ -43,6 +45,11 @@ public class ModItems {
             ITEMS.registerSimpleItem("ruby_axe", properties -> properties.axe(ModToolMaterials.RUBY, 5.0F, -3.0F));
     public static final DeferredItem<Item> RUBY_HOE =
             ITEMS.registerSimpleItem("ruby_hoe", properties -> properties.hoe(ModToolMaterials.RUBY, -3.0F, 0.0F));
+    public static final DeferredItem<Item> RUBY_SPEAR =
+            ITEMS.registerSimpleItem("ruby_spear", properties -> properties.spear(ModToolMaterials.RUBY, 1.05F, 1.075F, 0.5F, 3.0F, 7.5F, 6.5F, 5.1F, 10.0F, 4.6F));
+
+    public static final DeferredItem<BlockItem> HEATED_IRON_BLOCK =
+            ITEMS.registerSimpleBlockItem("heated_iron_block", ModBlocks.HEATED_IRON_BLOCK);
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

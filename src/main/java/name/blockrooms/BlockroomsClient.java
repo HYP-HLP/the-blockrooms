@@ -26,6 +26,6 @@ public class BlockroomsClient {
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
         Blockrooms.LOGGER.info("HELLO FROM CLIENT SETUP");
-        Blockrooms.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        // Blockrooms.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }
