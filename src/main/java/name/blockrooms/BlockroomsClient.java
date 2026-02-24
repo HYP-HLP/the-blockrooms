@@ -1,6 +1,5 @@
 package name.blockrooms;
 
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -25,7 +24,7 @@ public class BlockroomsClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
-        Blockrooms.LOGGER.info("HELLO FROM CLIENT SETUP");
+        // Blockrooms.LOGGER.info("HELLO FROM CLIENT SETUP");
         // Blockrooms.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }

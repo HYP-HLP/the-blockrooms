@@ -1,6 +1,7 @@
 package name.blockrooms;
 
 import name.blockrooms.block.ModBlocks;
+import name.blockrooms.event.NoclipHandler;
 import name.blockrooms.event.RubyTransHandler;
 import name.blockrooms.item.ModCreativeModeTabs;
 import name.blockrooms.item.ModItems;
@@ -59,11 +60,12 @@ public class Blockrooms {
         NeoForge.EVENT_BUS.register(this);
 
         NeoForge.EVENT_BUS.register(new RubyTransHandler());
+        NeoForge.EVENT_BUS.register(new NoclipHandler());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+        // LOGGER.info("HELLO FROM COMMON SETUP");
 
         /*
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
@@ -81,6 +83,6 @@ public class Blockrooms {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        // LOGGER.info("HELLO from server starting");
     }
 }

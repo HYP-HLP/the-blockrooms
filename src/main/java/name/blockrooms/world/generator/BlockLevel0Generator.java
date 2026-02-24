@@ -45,30 +45,11 @@ public class BlockLevel0Generator extends ChunkGenerator {
                 int worldZ = chunk.getPos().getMinBlockZ() + z;
 
                 for (int y = this.getMinY(); y <= this.getGenDepth(); y++) {
-                    if (y >= 0 && y <= 4) continue;
-                    chunk.setBlockState(new BlockPos(x, y, z), Blocks.BEDROCK.defaultBlockState(), 0);
+                    if (y >= 0 && y <= 4) chunk.setBlockState(new BlockPos(x, y, z), Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_NONE);
+                    else chunk.setBlockState(new BlockPos(x, y, z), Blocks.BEDROCK.defaultBlockState(), Block.UPDATE_NONE);
                 }
-                chunk.setBlockState(new BlockPos(x, 0, z), Blocks.OAK_PLANKS.defaultBlockState(), Block.UPDATE_CLIENTS);
-
-                if (new Random().nextDouble() <= 0.3) {
-                    for (int y = 1; y <= 4; y++) {
-                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
-                    }
-                }
-                else {
-                    chunk.setBlockState(new BlockPos(x, 1, z), Blocks.BROWN_CARPET.defaultBlockState(), Block.UPDATE_CLIENTS);
-                }
-
-                    /*
-                if (router.finalDensity().compute(new DensityFunction.SinglePointContext(worldX, y, worldZ)) > 0) {
-                    for (int y = 1; y <= 4; y++) {
-                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
-                    }
-                }
-                else {
-                    chunk.setBlockState(new BlockPos(x, 1, z), Blocks.BROWN_CARPET.defaultBlockState(), Block.UPDATE_CLIENTS);
-                }
-                     */
+                chunk.setBlockState(new BlockPos(x, 0, z), Blocks.OAK_PLANKS.defaultBlockState(), Block.UPDATE_NONE);
+                chunk.setBlockState(new BlockPos(x, 1, z), Blocks.BROWN_CARPET.defaultBlockState(), Block.UPDATE_NONE);
 
                 if ((worldX % 5 + 5) % 5 < 2 && (worldZ % 2 + 2) % 2 == 0) {
                     chunk.setBlockState(new BlockPos(x, 5, z), Blocks.REDSTONE_LAMP.defaultBlockState().setValue(RedstoneLampBlock.LIT, true), Block.UPDATE_ALL);
@@ -83,13 +64,23 @@ public class BlockLevel0Generator extends ChunkGenerator {
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion worldGenRegion, long l, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess) {
-
+    public void applyCarvers(WorldGenRegion worldGenRegion, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunk) {
     }
 
     @Override
-    public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
+    public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState, ChunkAccess chunk) {
+        for (int x = 0; x <= 16; x++) {
+            for (int z = 0; z <= 16; z++) {
+                int worldX = chunk.getPos().getMinBlockX() + x;
+                int worldZ = chunk.getPos().getMinBlockZ() + z;
 
+                if (new Random(worldGenRegion.getSeed() ^ (worldX * 0x9e3779b97f4a7c15L) ^ (worldZ * 0xdefacedddeedbeefL)).nextDouble() <= 0.3) {
+                    for (int y = 1; y <= 4; y++) {
+                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -124,10 +115,7 @@ public class BlockLevel0Generator extends ChunkGenerator {
 
     @Override
     public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
-        list.add("x: " + blockPos.getX() + "; y: " + blockPos.getY() + "; z: " + blockPos.getZ()
-                + "; density: " + randomState.router().finalDensity().compute(new DensityFunction.SinglePointContext(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                + "; continents: " + randomState.router().continents().compute(new DensityFunction.SinglePointContext(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-        );
+
     }
 
 
