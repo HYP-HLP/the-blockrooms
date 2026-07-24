@@ -9,6 +9,4 @@ public class ItemProjectileRenderState extends EntityRenderState {
     public boolean hasSubState() {
         return !this.item.isEmpty();
     }
-    
-    
 }
