@@ -9,5 +9,6 @@ public class BlockProjectileRenderState extends EntityRenderState {
     public boolean hasSubState() {
         return this.blockRenderState != null;
     }
+
 }
 

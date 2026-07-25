@@ -1,5 +1,8 @@
 package name.blockrooms.item.impl;
 
+import name.blockrooms.entity.BlockProjectile;
+import name.blockrooms.entity.ItemProjectile;
+import name.blockrooms.entity.UndamagedThrownEnderpearl;
 import name.blockrooms.item.components.ModDataComponents;
 import name.blockrooms.util.ItemList;
 import net.minecraft.server.level.ServerLevel;
@@ -14,10 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -88,7 +88,7 @@ public class GunBowItem extends Item {
         return !chargedProjectiles.isEmpty();
     }
     public void shoot(ServerLevel level, Player player, ItemStack gunbow){
-        List<ItemStack> chargedProjectiles = gunbow.getOrDefault(ModDataComponents.CHARGED_ITEMS, new ItemList());
+        List<ItemStack> chargedProjectiles = new ItemList(gunbow.getOrDefault(ModDataComponents.CHARGED_ITEMS, List.of()));
         ItemStack ammo = chargedProjectiles.getFirst();
         if(ammo.getItem() instanceof ArrowItem) {
             float velocity = 6.0f, inaccuracy = 0.0f, f4 = 0.0f;
@@ -99,8 +99,43 @@ public class GunBowItem extends Item {
                     gunbow,
                     p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
             );
+
+        } else if(ammo.getItem() instanceof EnderpearlItem){
+            float velocity = 3.5f, inaccuracy = 0.0f, f4 = 0.0f;
+            Projectile projectile = new UndamagedThrownEnderpearl(level, player, ammo);
+            Projectile.spawnProjectile(
+                    projectile,
+                    level,
+                    gunbow,
+                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
+            );
+        } else if(ammo.getItem() instanceof BlockItem bi){
+            float velocity = 2.5f, inaccuracy = 0.0f, f4 = 0.0f;
+            Projectile projectile = BlockProjectile.of(level, player, bi.getBlock().defaultBlockState());
+            Projectile.spawnProjectile(
+                    projectile,
+                    level,
+                    gunbow,
+                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
+            );
+        } else if(ammo.getItem() instanceof Item){
+            float velocity = 1.5f, inaccuracy = 0.0f, f4 = 0.0f;
+            ItemStack o = ammo.copy();
+            o.setCount(1);
+            Projectile projectile = ItemProjectile.of(level, player, o);
+            Projectile.spawnProjectile(
+                    projectile,
+                    level,
+                    gunbow,
+                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
+            );
+        }
+        if(ammo.getCount() <= 1){
+            chargedProjectiles.remove(ammo);
+        } else {
             ammo.shrink(1);
         }
+        gunbow.set(ModDataComponents.CHARGED_ITEMS, chargedProjectiles);
     }
     protected Projectile createArrow(Level level, LivingEntity shooter, ItemStack weapon, ItemStack ammo, boolean isCrit) {
         ArrowItem arrowitem = ammo.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem)Items.ARROW;
@@ -130,7 +165,6 @@ public class GunBowItem extends Item {
             LivingEntity p_40896_, Projectile p_332122_, int p_331865_, float p_40900_, float p_40902_, float p_40903_, @Nullable LivingEntity p_330303_
     ) {
         Vector3f vector3f = calculateShootVector(p_40896_,p_330303_, p_40900_, p_40902_);
-
 
         p_332122_.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_40900_, p_40902_);
         p_40896_.level().playSound(null, p_40896_.getX(), p_40896_.getY(), p_40896_.getZ(), SoundEvents.CROSSBOW_SHOOT, p_40896_.getSoundSource(), 1.0F, 0.0f);

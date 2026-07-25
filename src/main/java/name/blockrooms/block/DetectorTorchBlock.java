@@ -49,7 +49,8 @@ public class DetectorTorchBlock extends TorchBlock {
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean isDay = context.getLevel().getDayTime() % 24000 < 13000;
-        return super.getStateForPlacement(context) == null ? null : super.getStateForPlacement(context).setValue(LIT, isDay);
+        BlockState state = super.getStateForPlacement(context);
+        return state == null ? null : state.setValue(LIT, isDay);
     }
 
     @Override
