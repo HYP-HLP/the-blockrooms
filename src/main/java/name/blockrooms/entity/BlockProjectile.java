@@ -24,10 +24,11 @@ public class BlockProjectile extends ArrowLikeProjectile {
         super(p_37248_, p_37249_);
     }
 
-    private BlockProjectile(Level level, Entity owner, BlockState blockState){
+    protected BlockProjectile(Level level, Entity owner, BlockState blockState){
         super(ModEntities.BLOCK_PROJECTILE.get(), level, owner);
         this.setBlockState(blockState);
     }
+
 
     public static BlockProjectile of(Level level, Entity owner, BlockState state){
         return new BlockProjectile(level, owner, state);
@@ -75,9 +76,7 @@ public class BlockProjectile extends ArrowLikeProjectile {
         super.addAdditionalSaveData(p_422670_);
         p_422670_.store(TAG_BLOCK_STATE, BlockState.CODEC, this.getBlockState());
     }
-    public boolean isNoPhysics() {
-        return this.noPhysics;
-    }
+
     @Override
     public void tick() {
         if(updateRenderState){
@@ -99,7 +98,7 @@ public class BlockProjectile extends ArrowLikeProjectile {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
         if(this.level().isClientSide()) return;
-
+        if(this.life <= 10) return;
         if(this.getOwner() instanceof LivingEntity l && this.level() instanceof ServerLevel sl){
             result.getEntity().hurtServer(sl, damageSources().mobProjectile(this, l), 5.0f);
         }
@@ -116,10 +115,8 @@ public class BlockProjectile extends ArrowLikeProjectile {
         this.discard();
     }
 
-
-
     @Override
     protected double getDefaultGravity() {
-        return 0.2;
+        return 0.05;
     }
 }

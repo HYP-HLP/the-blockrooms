@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GunBowItem extends Item {
-    private long tickCount = 0;
     public GunBowItem(Properties p_40660_) {
         super(p_40660_);
     }
@@ -36,7 +35,7 @@ public class GunBowItem extends Item {
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         if (level.isClientSide()) return;
         if (!(entity instanceof Player player)) return;
-        if(++tickCount % 20 == 0){
+        if (level.getGameTime() % 20 == 0) {
             if (player.getRandom().nextFloat() > 0.15f) return;
 
             consumeRandomItem(player, stack);
@@ -62,9 +61,8 @@ public class GunBowItem extends Item {
         }
         ItemStack consumed = target.copy();
         consumed.setCount(countToTake);
+        ItemList chargedItems = new ItemList(gunBow.getOrDefault(ModDataComponents.CHARGED_ITEMS, List.of()));
 
-        List<ItemStack> chargedItems = gunBow.getOrDefault(ModDataComponents.CHARGED_ITEMS, new ArrayList<>());
-        chargedItems = new ItemList(chargedItems);
         chargedItems.add(consumed);
         gunBow.set(ModDataComponents.CHARGED_ITEMS, chargedItems);
         target.shrink(countToTake);
@@ -75,67 +73,66 @@ public class GunBowItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        if(hand == InteractionHand.OFF_HAND) return InteractionResult.PASS;
-        if(level.isClientSide()) return InteractionResult.PASS;
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.PASS;
+        if (level.isClientSide()) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(hand);
-        if(isCharged(stack)){
+        if (isCharged(stack)) {
             shoot((ServerLevel) level, player, stack);
+            return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;
     }
     public static boolean isCharged(ItemStack gunbow) {
-        List<ItemStack> chargedProjectiles = gunbow.getOrDefault(ModDataComponents.CHARGED_ITEMS, new ItemList());
-        return !chargedProjectiles.isEmpty();
+        List<ItemStack> chargedItems = gunbow.getOrDefault(ModDataComponents.CHARGED_ITEMS, new ArrayList<>());
+        return gunbow.has(ModDataComponents.CHARGED_ITEMS) || !chargedItems.isEmpty();
     }
-    public void shoot(ServerLevel level, Player player, ItemStack gunbow){
+    public void shoot(ServerLevel level, Player player, ItemStack gunbow) {
         List<ItemStack> chargedProjectiles = new ItemList(gunbow.getOrDefault(ModDataComponents.CHARGED_ITEMS, List.of()));
+        if(chargedProjectiles.isEmpty()) return;
         ItemStack ammo = chargedProjectiles.getFirst();
-        if(ammo.getItem() instanceof ArrowItem) {
-            float velocity = 6.0f, inaccuracy = 0.0f, f4 = 0.0f;
-            Projectile projectile = createArrow(level, player, gunbow, ammo, false);
-            Projectile.spawnProjectile(
-                    projectile,
-                    level,
-                    gunbow,
-                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
-            );
 
-        } else if(ammo.getItem() instanceof EnderpearlItem){
-            float velocity = 3.5f, inaccuracy = 0.0f, f4 = 0.0f;
-            Projectile projectile = new UndamagedThrownEnderpearl(level, player, ammo);
+        Projectile projectile = createProjectileForAmmo(level, player, gunbow, ammo);
+        if (projectile != null) {
+            float velocity = getVelocityForAmmo(ammo);
             Projectile.spawnProjectile(
                     projectile,
                     level,
                     gunbow,
-                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
-            );
-        } else if(ammo.getItem() instanceof BlockItem bi){
-            float velocity = 2.5f, inaccuracy = 0.0f, f4 = 0.0f;
-            Projectile projectile = BlockProjectile.of(level, player, bi.getBlock().defaultBlockState());
-            Projectile.spawnProjectile(
-                    projectile,
-                    level,
-                    gunbow,
-                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
-            );
-        } else if(ammo.getItem() instanceof Item){
-            float velocity = 1.5f, inaccuracy = 0.0f, f4 = 0.0f;
-            ItemStack o = ammo.copy();
-            o.setCount(1);
-            Projectile projectile = ItemProjectile.of(level, player, o);
-            Projectile.spawnProjectile(
-                    projectile,
-                    level,
-                    gunbow,
-                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, inaccuracy, f4, null)
+                    p_360045_ -> shootProjectile(player, p_360045_, 1, velocity, 0.0f, 0.0f, null)
             );
         }
-        if(ammo.getCount() <= 1){
+
+        if (ammo.getCount() <= 1) {
             chargedProjectiles.remove(ammo);
         } else {
             ammo.shrink(1);
         }
         gunbow.set(ModDataComponents.CHARGED_ITEMS, chargedProjectiles);
+    }
+
+    private Projectile createProjectileForAmmo(Level level, Player player, ItemStack gunbow, ItemStack ammo) {
+        if (ammo.getItem() instanceof ArrowItem) {
+            return createArrow(level, player, gunbow, ammo, false);
+        } else if (ammo.getItem() instanceof EnderpearlItem) {
+            return new UndamagedThrownEnderpearl(level, player, ammo);
+        } else if (ammo.getItem() instanceof BlockItem bi) {
+            return BlockProjectile.of(level, player, bi.getBlock().defaultBlockState());
+        } else {
+            ItemStack o = ammo.copy();
+            o.setCount(1);
+            return ItemProjectile.of(level, player, o);
+        }
+    }
+
+    private static float getVelocityForAmmo(ItemStack ammo) {
+        if (ammo.getItem() instanceof ArrowItem) {
+            return 6.0f;
+        } else if (ammo.getItem() instanceof EnderpearlItem) {
+            return 4.5f;
+        } else if (ammo.getItem() instanceof BlockItem) {
+            return 3.5f;
+        }
+        return 5.0f;
     }
     protected Projectile createArrow(Level level, LivingEntity shooter, ItemStack weapon, ItemStack ammo, boolean isCrit) {
         ArrowItem arrowitem = ammo.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem)Items.ARROW;

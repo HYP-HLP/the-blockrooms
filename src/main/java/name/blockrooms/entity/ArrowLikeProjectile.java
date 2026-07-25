@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -19,6 +20,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class ArrowLikeProjectile extends Projectile {
+    protected long life;
 
     protected ArrowLikeProjectile(EntityType<? extends Projectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
@@ -53,16 +55,12 @@ public class ArrowLikeProjectile extends Projectile {
         }
         Vec3 vec32 = this.position();
 
-        float f;
-        if (!flag) {
-            f = (float)(Mth.atan2(-vec3.x, -vec3.z) * 180.0F / (float)Math.PI);
-        } else {
-            f = (float)(Mth.atan2(vec3.x, vec3.z) * 180.0F / (float)Math.PI);
-        }
-
-        float f1 = (float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 180.0F / (float)Math.PI);
-        this.setXRot(lerpRotation(this.getXRot(), f1));
-        this.setYRot(lerpRotation(this.getYRot(), f));
+        double dirX = flag ? vec3.x : -vec3.x;
+        double dirZ = flag ? vec3.z : -vec3.z;
+        float targetYaw = (float) (Mth.atan2(dirX, dirZ) * 180.0F / (float) Math.PI);
+        float targetPitch = (float) (Mth.atan2(vec3.y, vec3.horizontalDistance()) * 180.0F / (float) Math.PI);
+        this.setXRot(lerpRotation(this.getXRot(), targetPitch));
+        this.setYRot(lerpRotation(this.getYRot(), targetYaw));
         this.checkLeftOwner();
         if (flag) {
             BlockHitResult blockhitresult = this.level()
@@ -72,8 +70,7 @@ public class ArrowLikeProjectile extends Projectile {
             this.setPos(vec32.add(vec3));
             this.applyEffectsFromBlocks();
         }
-
-
+        life++;
         this.applyGravity();
 
         super.tick();
@@ -103,6 +100,11 @@ public class ArrowLikeProjectile extends Projectile {
             } else if (this.isAlive() && !this.noPhysics && entityhitresult.getType() != HitResult.Type.MISS) {
                 if (net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, entityhitresult))
                     break;
+                ProjectileDeflection projectiledeflection = this.hitTargetsOrDeflectSelf(arraylist);
+                this.needsSync = true;
+                if (projectiledeflection == ProjectileDeflection.NONE) {
+                    continue;
+                }
                 break;
             }
         }
@@ -112,10 +114,23 @@ public class ArrowLikeProjectile extends Projectile {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }
+    private ProjectileDeflection hitTargetsOrDeflectSelf(Collection<EntityHitResult> hitResults) {
+        for (EntityHitResult entityhitresult : hitResults) {
+            ProjectileDeflection projectiledeflection = this.hitTargetOrDeflectSelf(entityhitresult);
+            if (!this.isAlive() || projectiledeflection != ProjectileDeflection.NONE) {
+                return projectiledeflection;
+            }
+        }
 
+        return ProjectileDeflection.NONE;
+    }
     protected Collection<EntityHitResult> findHitEntities(Vec3 start, Vec3 end) {
         return ProjectileUtil.getManyEntityHitResult(
                 this.level(), this, start, end, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity, false
         );
+    }
+
+    protected boolean shouldReturn(){
+        return false;
     }
 }
