@@ -46,6 +46,6 @@ public class ItemProjectileRenderer extends EntityRenderer<ItemProjectile, ItemP
     }
 
     public void submitInner(ItemProjectileRenderState p_433571_, PoseStack p_432839_, SubmitNodeCollector p_433402_) {
-        p_433571_.item.submit(p_432839_, p_433402_, 0, OverlayTexture.NO_OVERLAY, p_433571_.outlineColor);
+        p_433571_.item.submit(p_432839_, p_433402_, p_433571_.lightCoords, OverlayTexture.NO_OVERLAY, p_433571_.outlineColor);
     }
 }

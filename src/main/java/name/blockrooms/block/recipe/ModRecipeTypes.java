@@ -18,7 +18,7 @@ public class ModRecipeTypes {
             RECIPE_TYPES.register("crafting_error", () -> new RecipeType<>() {
                 @Override
                 public String toString() {
-                    return Blockrooms.MODID + "crafting_error";
+                    return Blockrooms.MODID + ":crafting_error";
                 }
             });
     public static final DeferredHolder<RecipeSerializer<?>, ErrorCraftingRecipe.Serializer> ERROR_CRAFTING_SERIALIZER =

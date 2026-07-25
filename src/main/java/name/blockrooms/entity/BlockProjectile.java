@@ -1,26 +1,32 @@
 package name.blockrooms.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 
-public class BlockProjectile extends Projectile {
+public class BlockProjectile extends ArrowLikeProjectile {
+
     public BlockProjectile(EntityType<? extends Projectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
     }
 
     private BlockProjectile(Level level, Entity owner, BlockState blockState){
-        super(ModEntities.BLOCK_PROJECTILE.get(), level);
+        super(ModEntities.BLOCK_PROJECTILE.get(), level, owner);
         this.setBlockState(blockState);
-        this.setOwner(owner);
     }
 
     public static BlockProjectile of(Level level, Entity owner, BlockState state){
@@ -69,11 +75,51 @@ public class BlockProjectile extends Projectile {
         super.addAdditionalSaveData(p_422670_);
         p_422670_.store(TAG_BLOCK_STATE, BlockState.CODEC, this.getBlockState());
     }
+    public boolean isNoPhysics() {
+        return this.noPhysics;
+    }
+    @Override
+    public void tick() {
+        if(updateRenderState){
+            updateRenderSubState();
+            updateRenderState = false;
+        }
+
+        super.tick();
+    }
 
     public BlockRenderState blockRenderState() {
         return this.blockRenderState;
     }
 
     public record BlockRenderState(BlockState blockState) {
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        super.onHitEntity(result);
+        if(this.level().isClientSide()) return;
+
+        if(this.getOwner() instanceof LivingEntity l && this.level() instanceof ServerLevel sl){
+            result.getEntity().hurtServer(sl, damageSources().mobProjectile(this, l), 5.0f);
+        }
+        FallingBlockEntity.fall(this.level(), new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockState());
+        this.discard();
+
+    }
+
+    @Override
+    protected void onHitBlock(BlockHitResult result) {
+        super.onHitBlock(result);
+        if (this.level().isClientSide()) return;
+        FallingBlockEntity.fall(this.level(), new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockState());
+        this.discard();
+    }
+
+
+
+    @Override
+    protected double getDefaultGravity() {
+        return 0.2;
     }
 }

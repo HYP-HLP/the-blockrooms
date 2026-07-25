@@ -1,0 +1,121 @@
+package name.blockrooms.entity;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Objects;
+
+public class ArrowLikeProjectile extends Projectile {
+
+    protected ArrowLikeProjectile(EntityType<? extends Projectile> p_37248_, Level p_37249_) {
+        super(p_37248_, p_37249_);
+    }
+
+    protected ArrowLikeProjectile(EntityType<? extends Projectile> type, Level level, Entity owner){
+        super(type, level);
+        this.setOwner(owner);
+        this.setPos(owner.getX(), owner.getEyeY() - 0.1f, owner.getZ());
+    }
+    public boolean isNoPhysics() {
+        return this.noPhysics;
+    }
+    @Override
+    public void tick() {
+        boolean flag = !this.isNoPhysics();
+        Vec3 vec3 = this.getDeltaMovement();
+        BlockPos blockpos = this.blockPosition();
+        BlockState blockstate = this.level().getBlockState(blockpos);
+        if (!blockstate.isAir() && flag) {
+            VoxelShape voxelshape = blockstate.getCollisionShape(this.level(), blockpos);
+            if (!voxelshape.isEmpty()) {
+                Vec3 vec31 = this.position();
+
+                for (AABB aabb : voxelshape.toAabbs()) {
+                    if (aabb.move(blockpos).contains(vec31)) {
+                        this.setDeltaMovement(Vec3.ZERO);
+                        break;
+                    }
+                }
+            }
+        }
+        Vec3 vec32 = this.position();
+
+        float f;
+        if (!flag) {
+            f = (float)(Mth.atan2(-vec3.x, -vec3.z) * 180.0F / (float)Math.PI);
+        } else {
+            f = (float)(Mth.atan2(vec3.x, vec3.z) * 180.0F / (float)Math.PI);
+        }
+
+        float f1 = (float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 180.0F / (float)Math.PI);
+        this.setXRot(lerpRotation(this.getXRot(), f1));
+        this.setYRot(lerpRotation(this.getYRot(), f));
+        this.checkLeftOwner();
+        if (flag) {
+            BlockHitResult blockhitresult = this.level()
+                    .clipIncludingBorder(new ClipContext(vec32, vec32.add(vec3), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            this.stepMoveAndHit(blockhitresult);
+        } else {
+            this.setPos(vec32.add(vec3));
+            this.applyEffectsFromBlocks();
+        }
+
+
+        this.applyGravity();
+
+        super.tick();
+    }
+
+    private void stepMoveAndHit(BlockHitResult hitResult) {
+        while (this.isAlive()) {
+            Vec3 vec3 = this.position();
+            ArrayList<EntityHitResult> arraylist = new ArrayList<>(this.findHitEntities(vec3, hitResult.getLocation()));
+            arraylist.sort(Comparator.comparingDouble(p_481016_ -> vec3.distanceToSqr(p_481016_.getEntity().position())));
+            EntityHitResult entityhitresult = arraylist.isEmpty() ? null : arraylist.getFirst();
+            Vec3 vec31 = Objects.requireNonNullElse(entityhitresult, hitResult).getLocation();
+            this.setPos(vec31);
+            this.applyEffectsFromBlocks(vec3, vec31);
+            if (this.portalProcess != null && this.portalProcess.isInsidePortalThisTick()) {
+                this.handlePortal();
+            }
+
+            if (arraylist.isEmpty()) {
+                if (this.isAlive() && hitResult.getType() != HitResult.Type.MISS) {
+                    if (net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitResult))
+                        break;
+                    this.hitTargetOrDeflectSelf(hitResult);
+                    this.needsSync = true;
+                }
+                break;
+            } else if (this.isAlive() && !this.noPhysics && entityhitresult.getType() != HitResult.Type.MISS) {
+                if (net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, entityhitresult))
+                    break;
+                break;
+            }
+        }
+
+    }
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
+    }
+
+    protected Collection<EntityHitResult> findHitEntities(Vec3 start, Vec3 end) {
+        return ProjectileUtil.getManyEntityHitResult(
+                this.level(), this, start, end, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), this::canHitEntity, false
+        );
+    }
+}

@@ -12,9 +12,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModEntities {
     public static final DeferredRegister.Entities ENTITY_TYPES = DeferredRegister.createEntities(Blockrooms.MODID);
-    private static ResourceKey<EntityType<?>> entityId(String name) {
-        return ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace(name));
-    }
     private static ResourceKey<EntityType<?>> entityId(Identifier id) {
         return ResourceKey.create(Registries.ENTITY_TYPE, id);
     }

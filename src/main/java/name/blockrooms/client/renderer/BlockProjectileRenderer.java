@@ -17,7 +17,7 @@ public class BlockProjectileRenderer extends EntityRenderer<BlockProjectile, Blo
     public void submit(BlockProjectileRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         if (renderState != null && renderState.hasSubState()) {
             super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
-            this.submitInner(renderState, poseStack, nodeCollector, renderState.blockRenderState.blockState().getLightBlock());
+            this.submitInner(renderState, poseStack, nodeCollector, renderState.lightCoords);
         }
     }
 
@@ -27,5 +27,10 @@ public class BlockProjectileRenderer extends EntityRenderer<BlockProjectile, Blo
     @Override
     public BlockProjectileRenderState createRenderState() {
         return new BlockProjectileRenderState();
+    }
+    @Override
+    public void extractRenderState(BlockProjectile p_362697_, BlockProjectileRenderState p_363759_, float p_360854_) {
+        super.extractRenderState(p_362697_, p_363759_, p_360854_);
+        p_363759_.blockRenderState = p_362697_.blockRenderState();
     }
 }
