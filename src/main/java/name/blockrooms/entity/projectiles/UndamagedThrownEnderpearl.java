@@ -1,4 +1,4 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;

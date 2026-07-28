@@ -1,5 +1,6 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
+import name.blockrooms.entity.ModEntities;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -50,6 +51,8 @@ public class ItemProjectile extends ArrowLikeProjectile {
     public static ItemProjectile of(Level level, Entity owner, ItemStack stack){
         if(stack.is(Tags.Items.MUSIC_DISCS) && stack.has(DataComponents.JUKEBOX_PLAYABLE)){
             return new DiscProjectile(level, owner, stack);
+        } else if(stack.has(DataComponents.TOOL)){
+            return new ToolItemProjectile(level, owner, stack);
         }
         return new ItemProjectile(level, owner, stack);
     }

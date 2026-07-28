@@ -1,6 +1,8 @@
 package name.blockrooms.entity;
 
 import name.blockrooms.Blockrooms;
+import name.blockrooms.entity.projectiles.BlockProjectile;
+import name.blockrooms.entity.projectiles.ItemProjectile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;

@@ -1,10 +1,11 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -14,10 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 public class ArrowLikeProjectile extends Projectile {
     protected long life;
@@ -72,7 +70,8 @@ public class ArrowLikeProjectile extends Projectile {
         }
         life++;
         this.applyGravity();
-
+        if(getDeltaMovement().lengthSqr() <= 0.01f || life >= getMaxLife())
+            dropAndDiscard();
         super.tick();
     }
 
@@ -132,5 +131,18 @@ public class ArrowLikeProjectile extends Projectile {
 
     protected boolean shouldReturn(){
         return false;
+    }
+
+    public final Optional<LivingEntity> getLivingOwner() {
+        if(this.getOwner() instanceof LivingEntity le) return Optional.of(le);
+        return Optional.empty();
+    }
+
+    public void dropAndDiscard(){
+        this.discard();
+    }
+
+    public int getMaxLife(){
+        return 200;
     }
 }

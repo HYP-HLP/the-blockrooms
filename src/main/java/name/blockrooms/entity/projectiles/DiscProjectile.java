@@ -1,4 +1,4 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
 import name.blockrooms.util.VectorUtils;
 import net.minecraft.client.Minecraft;

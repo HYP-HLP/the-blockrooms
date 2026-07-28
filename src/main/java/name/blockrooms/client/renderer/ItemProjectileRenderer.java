@@ -1,7 +1,7 @@
 package name.blockrooms.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import name.blockrooms.entity.ItemProjectile;
+import name.blockrooms.entity.projectiles.ItemProjectile;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
