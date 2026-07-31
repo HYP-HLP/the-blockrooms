@@ -31,6 +31,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DETECTOR_TORCH);
                         output.accept(ModItems.DETECTOR_REDSTONE_LAMP);
                         output.accept(ModItems.QUARTZ_ELEVATOR);
+                        output.accept(ModItems.GUNBOW);
                     })
                     .build());
     public static void register(IEventBus eventBus) {

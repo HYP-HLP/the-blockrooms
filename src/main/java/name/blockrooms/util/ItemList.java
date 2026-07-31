@@ -14,17 +14,14 @@ public class ItemList extends ArrayList<ItemStack> {
     }
     @Override
     public boolean add(ItemStack itemStack) {
-        boolean f = false;
-        for(ItemStack itemStack1 : this){
-            if(itemStack1.is(itemStack.getItem())){
-                f = true;
-                itemStack1.setCount(itemStack1.getCount() + itemStack.getCount());
+        boolean merged = false;
+        for (ItemStack existing : this) {
+            if (existing.is(itemStack.getItem())) {
+                existing.setCount(existing.getCount() + itemStack.getCount());
+                merged = true;
+                break;
             }
         }
-        if(!f){
-            return super.add(itemStack);
-        } else {
-            return f;
-        }
+        return merged || super.add(itemStack);
     }
 }

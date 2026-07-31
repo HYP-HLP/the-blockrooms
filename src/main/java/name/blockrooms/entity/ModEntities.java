@@ -1,6 +1,8 @@
 package name.blockrooms.entity;
 
 import name.blockrooms.Blockrooms;
+import name.blockrooms.entity.projectiles.BlockProjectile;
+import name.blockrooms.entity.projectiles.ItemProjectile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -17,11 +19,11 @@ public class ModEntities {
     }
     public static final DeferredHolder<EntityType<?>, EntityType<ItemProjectile>> ITEM_PROJECTILE =
             ENTITY_TYPES.register("item_projectile",id ->
-                    EntityType.Builder.of(ItemProjectile::new, MobCategory.MISC).build(entityId(id)));
+                    EntityType.Builder.<ItemProjectile>of(ItemProjectile::new, MobCategory.MISC).sized(0.5F, 0.5F).build(entityId(id)));
 
     public static final DeferredHolder<EntityType<?>, EntityType<BlockProjectile>> BLOCK_PROJECTILE =
             ENTITY_TYPES.register("block_projectile", id ->
-                    EntityType.Builder.of(BlockProjectile::new, MobCategory.MISC).build(entityId(id)));
+                    EntityType.Builder.<BlockProjectile>of(BlockProjectile::new, MobCategory.MISC).sized(1.0f,1.0f).build(entityId(id)));
 
 
     public static void register(IEventBus bus){

@@ -1,5 +1,7 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
+import name.blockrooms.entity.ModEntities;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,14 +15,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
+import org.joml.Vector3fc;
 
 public class ItemProjectile extends ArrowLikeProjectile {
+    private static final EntityDataAccessor<Boolean> RETURN = SynchedEntityData.defineId(ItemProjectile.class, EntityDataSerializers.BOOLEAN);
+
     protected boolean updateRenderState;
     private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK_ID = SynchedEntityData.defineId(
             ItemProjectile.class, EntityDataSerializers.ITEM_STACK
-    ); private static final EntityDataAccessor<Byte> DATA_ITEM_DISPLAY_ID = SynchedEntityData.defineId(ItemProjectile.class, EntityDataSerializers.BYTE);
+    );
+    private static final EntityDataAccessor<Vector3fc> SHOT_POS = SynchedEntityData.defineId(ItemProjectile.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Byte> DATA_ITEM_DISPLAY_ID = SynchedEntityData.defineId(ItemProjectile.class, EntityDataSerializers.BYTE);
     private ItemRenderState itemRenderState;
-    private ItemStack getItemStack() {
+    protected ItemStack getItemStack() {
         return this.entityData.get(DATA_ITEM_STACK_ID);
     }
     @Override
@@ -32,17 +41,19 @@ public class ItemProjectile extends ArrowLikeProjectile {
     }
     public ItemProjectile(EntityType<? extends Projectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
-
         setItemTransform(ItemDisplayContext.FIXED);
     }
-    private ItemProjectile(Level level, Entity owner, ItemStack stack){
-        this(ModEntities.ITEM_PROJECTILE.get(), level);
-        setOwner(owner);
+    protected ItemProjectile(Level level, Entity owner, ItemStack stack){
+        super(ModEntities.ITEM_PROJECTILE.get(), level, owner);
         updateItemStack(stack);
         setItemTransform(ItemDisplayContext.FIXED);
-        setPos(owner.getX(), owner.getY() - 0.1f, owner.getZ());
     }
     public static ItemProjectile of(Level level, Entity owner, ItemStack stack){
+        if(stack.is(Tags.Items.MUSIC_DISCS) && stack.has(DataComponents.JUKEBOX_PLAYABLE)){
+            return new DiscProjectile(level, owner, stack);
+        } else if(stack.has(DataComponents.TOOL)){
+            return new ToolItemProjectile(level, owner, stack);
+        }
         return new ItemProjectile(level, owner, stack);
     }
 
@@ -50,6 +61,8 @@ public class ItemProjectile extends ArrowLikeProjectile {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_ITEM_STACK_ID, ItemStack.EMPTY);
         builder.define(DATA_ITEM_DISPLAY_ID, ItemDisplayContext.FIXED.getId());
+        builder.define(SHOT_POS, Vec3.ZERO.toVector3f());
+        builder.define(RETURN, false);
     }
     public ItemRenderState itemRenderState() {
         return this.itemRenderState;
@@ -63,7 +76,6 @@ public class ItemProjectile extends ArrowLikeProjectile {
     }
     @Override
     public void tick() {
-        boolean flag = !this.noPhysics;
         if(updateRenderState){
             updateRenderSubState();
             updateRenderState = false;
@@ -74,23 +86,15 @@ public class ItemProjectile extends ArrowLikeProjectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if(this.level() instanceof ServerLevel sl){
-            ItemEntity entity = new ItemEntity(sl, this.getX(), this.getY(), this.getZ(), this.getItemStack());
-            sl.addFreshEntity(entity);
-        }
 
-        this.discard();
-
+        dropAndDiscard();
     }
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if(this.level() instanceof ServerLevel sl){
-            ItemEntity entity = new ItemEntity(sl, result.getEntity().getX(), result.getEntity().getY(), result.getEntity().getZ(), this.getItemStack());
-            sl.addFreshEntity(entity);
-        }
-        this.discard();
+        if(result.getEntity().is(getOwner())) return;
+        dropAndDiscard();
     }
 
     public void updateItemStack(ItemStack stack) {
@@ -112,6 +116,30 @@ public class ItemProjectile extends ArrowLikeProjectile {
     @Override
     protected double getDefaultGravity() {
         return 0.05;
+    }
+
+    @Override
+    protected boolean shouldReturn() {
+        return this.entityData.get(RETURN);
+    }
+
+    public Vec3 getShotPosition() {
+        return new Vec3(this.entityData.get(SHOT_POS));
+    }
+    public void setShotPosition(Vec3 shotPosition) {
+        this.entityData.set(SHOT_POS, shotPosition.toVector3f());
+    }
+    public void setReturn(boolean value) {
+        this.entityData.set(RETURN, value);
+    }
+
+    public void dropAndDiscard(){
+        if(this.level() instanceof ServerLevel sl){
+            ItemEntity entity = new ItemEntity(sl, this.getX(), this.getY(), this.getZ(), this.getItemStack());
+            sl.addFreshEntity(entity);
+        }
+
+        this.discard();
     }
 }
 

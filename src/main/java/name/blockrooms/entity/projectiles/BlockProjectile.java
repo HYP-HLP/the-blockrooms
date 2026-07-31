@@ -1,5 +1,6 @@
-package name.blockrooms.entity;
+package name.blockrooms.entity.projectiles;
 
+import name.blockrooms.entity.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -18,16 +19,19 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
+import java.util.Objects;
+
 public class BlockProjectile extends ArrowLikeProjectile {
 
     public BlockProjectile(EntityType<? extends Projectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
     }
 
-    private BlockProjectile(Level level, Entity owner, BlockState blockState){
+    protected BlockProjectile(Level level, Entity owner, BlockState blockState){
         super(ModEntities.BLOCK_PROJECTILE.get(), level, owner);
         this.setBlockState(blockState);
     }
+
 
     public static BlockProjectile of(Level level, Entity owner, BlockState state){
         return new BlockProjectile(level, owner, state);
@@ -75,9 +79,7 @@ public class BlockProjectile extends ArrowLikeProjectile {
         super.addAdditionalSaveData(p_422670_);
         p_422670_.store(TAG_BLOCK_STATE, BlockState.CODEC, this.getBlockState());
     }
-    public boolean isNoPhysics() {
-        return this.noPhysics;
-    }
+
     @Override
     public void tick() {
         if(updateRenderState){
@@ -98,28 +100,28 @@ public class BlockProjectile extends ArrowLikeProjectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if(this.level().isClientSide()) return;
-
+        if(Objects.equals(result.getEntity(), getOwner())) return;
         if(this.getOwner() instanceof LivingEntity l && this.level() instanceof ServerLevel sl){
             result.getEntity().hurtServer(sl, damageSources().mobProjectile(this, l), 5.0f);
         }
-        FallingBlockEntity.fall(this.level(), new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockState());
-        this.discard();
-
+        dropAndDiscard();
     }
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
         if (this.level().isClientSide()) return;
-        FallingBlockEntity.fall(this.level(), new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockState());
-        this.discard();
+        dropAndDiscard();
     }
-
-
 
     @Override
     protected double getDefaultGravity() {
-        return 0.2;
+        return 0.05;
+    }
+
+    @Override
+    public void dropAndDiscard() {
+        FallingBlockEntity.fall(this.level(), new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockState());
+        this.discard();
     }
 }
