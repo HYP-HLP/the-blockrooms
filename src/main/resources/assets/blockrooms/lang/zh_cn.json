@@ -19,8 +19,9 @@
   "item.blockrooms.gunbow": "枪弓",
   "key.blockrooms.noclipping": "卡出",
   "container.error_crafting": "error: Compilation Error",
-
+  "gui.in_blockrooms": "Blockrooms 1.ψ.5",
   "blockrooms.music.menu.beginning": "C418 - Beginning",
+  "blockrooms.music.blocklevel7.dragon_fish": "C418 - Dragon Fish",
   "blockrooms.configuration.title": "块室模组配置",
   "blockrooms.configuration.section.blockrooms.common.toml": "配置块室模组",
   "blockrooms.configuration.section.blockrooms.common.toml.title": "配置块室模组",

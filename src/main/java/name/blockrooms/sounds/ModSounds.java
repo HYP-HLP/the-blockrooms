@@ -14,6 +14,7 @@ public class ModSounds {
             SOUNDS.register("music.beginning", SoundEvent::createVariableRangeEvent);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOCKLEVEL1 =
             SOUNDS.register("music.blockrooms.blocklevel1", SoundEvent::createVariableRangeEvent);
-
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCKLEVEL7_DRAGON_FISH =
+            SOUNDS.register("music.blockrooms.blocklevel7.dragon_fish", SoundEvent::createVariableRangeEvent);
     public static void register(IEventBus eventBus) { SOUNDS.register(eventBus); }
 }

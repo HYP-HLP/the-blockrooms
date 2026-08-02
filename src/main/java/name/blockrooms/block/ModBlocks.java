@@ -70,10 +70,23 @@ public class ModBlocks {
                     .strength(0.3F)
                     .sound(SoundType.GLASS)
                     .isValidSpawn(Blocks::always));
-    public static final DeferredBlock<Block> QUARTZ_ELEVATOR = BLOCKS.registerSimpleBlock(
+    public static final DeferredBlock<Block> QUARTZ_ELEVATOR = BLOCKS.registerBlock(
             "quartz_elevator",
+            QuartzElevatorBlock::new,
             properties -> properties.mapColor(MapColor.QUARTZ)
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
                     .strength(0.8F));
+    public static final DeferredBlock<Block> SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock("soft_cobblestone",
+            properties -> properties.mapColor(MapColor.STONE)
+                    .requiresCorrectToolForDrops()
+                    .mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(2.0F, 6.0F)
+    );
+    public static final DeferredBlock<Block> PROCESSED_SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock("processed_soft_cobblestone",
+            properties -> properties.mapColor(MapColor.STONE)
+                    .requiresCorrectToolForDrops()
+                    .mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(2.0F, 6.0F)
+    );
 }

@@ -7,12 +7,16 @@
     "RecipeCraftingHolderMixin",
     "ResultSlotInvoker",
     "ResultSlotMixin",
-    "StructureManagerMixin"
+    "StructureManagerMixin",
+    "DebugScreenOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+
+  ]
 }

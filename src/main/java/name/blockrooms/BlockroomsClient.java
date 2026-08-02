@@ -12,6 +12,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
 @Mod(value = Blockrooms.MODID, dist = Dist.CLIENT)
@@ -36,5 +37,10 @@ public class BlockroomsClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLOCK_PROJECTILE.get(), BlockProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ITEM_PROJECTILE.get(), ItemProjectileRenderer::new);
+    }
+
+    @SubscribeEvent // on the mod event bus
+    public static void gatherData(GatherDataEvent.Client event) {
+        // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
     }
 }
