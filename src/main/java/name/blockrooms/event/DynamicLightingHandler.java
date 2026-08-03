@@ -4,45 +4,72 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import org.jspecify.annotations.Nullable;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class DynamicLightingHandler {
-    @Nullable private static BlockPos sourcePos;
-    private static Set<Entity> lightSources;
+    private static Map<BlockPos, Integer> lightLevels = new HashMap<>();
+    // private static Set<Entity> lightSources;
 
-    private static boolean canOcclude(BlockAndTintGetter level, BlockPos pos) {
-        return level.getBlockState(pos).canOcclude();
-    }
-
-    public static int getLightWithoutOcclusion(BlockAndTintGetter level, BlockPos pos) {
-        if (sourcePos != null) {
-            int distance = Math.abs(sourcePos.getX() - pos.getX())
-                    + Math.abs(sourcePos.getY() - pos.getY())
-                    + Math.abs(sourcePos.getZ() - pos.getZ());
-            return Math.max(0, 15 - distance);
+    public static int getLightWithOcclusion(BlockAndTintGetter level, BlockPos pos) {
+         if (!level.getBlockState(pos).canOcclude()) {
+            return lightLevels.getOrDefault(pos, 0);
         }
         return 0;
     }
 
-    /* private static void calculateLightPos(Level level, BlockPos pos) {
+    private static void setLight(BlockAndTintGetter level, BlockPos pos, int i) {
+        Map<BlockPos, Integer> newLightLevels = new HashMap<>();
+        newLightLevels.put(pos, i);
+        for (int l = i - 1; l > 0; l--) {
+            final int lightFilter = l + 1;
+            for (BlockPos currentPos : newLightLevels.entrySet().stream().filter(e -> e.getValue() == lightFilter).map(Map.Entry::getKey).toArray(BlockPos[]::new)) {
+                for (Direction dir : Direction.values()) {
+                    BlockPos relativePos = currentPos.relative(dir);
+                    if (!newLightLevels.containsKey(relativePos) && canLightPass(level, currentPos, relativePos, dir)) {
+                        newLightLevels.put(relativePos, l);
+                    }
+                }
+            }
+        }
+        if (!newLightLevels.equals(lightLevels)) {
+            lightLevels = newLightLevels;
+            for (BlockPos blockPos : lightLevels.keySet()) {
+                setDirty(SectionPos.of(blockPos));
+            }
+        }
+    }
 
-    } */
+    private static boolean canLightPass(BlockAndTintGetter level, BlockPos currentPos, BlockPos relativePos, Direction dir) {
+        return !Shapes.faceShapeOccludes(getShape(level, level.getBlockState(currentPos), currentPos, dir), getShape(level, level.getBlockState(relativePos), relativePos, dir.getOpposite()));
+    }
+
+    private static VoxelShape getShape(BlockAndTintGetter level, BlockState state, BlockPos pos, Direction dir) {
+        return (state.getLightEmission(level, pos) < 15 && !state.canOcclude()) || !state.isSolid() ? Shapes.empty() : state.getFaceOcclusionShape(dir);
+    }
+
+    public static void setDirty(SectionPos section) {
+        Minecraft.getInstance().levelRenderer.setSectionDirty(section.getX(), section.getY(), section.getZ());
+    }
 
     /* at SubscribeEvent
     public static void onServerTick(ServerTickEvent.Pre event) {
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-            if (player.getInventory().contains(input -> input.is(Items.GLOWSTONE))) {
+            if (player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.GLOWSTONE_DUST)) {
                 lightSources.add(player);
             }
         }
@@ -53,10 +80,17 @@ public class DynamicLightingHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         ClientLevel level = Minecraft.getInstance().level;
         if (player != null && level != null) {
-            sourcePos = player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.GLOWSTONE_DUST) ? BlockPos.containing(player.position()) : null;
-
-            /* level.getEntitiesOfClass(Entity.class,
-                    AABB.unitCubeFromLowerCorner(player.position()).inflate(12.0F)); */
+            boolean flag = player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.GLOWSTONE_DUST)
+                    || player.getItemInHand(InteractionHand.OFF_HAND).is(Items.GLOWSTONE_DUST);
+            BlockPos pos = BlockPos.containing(player.getEyePosition());
+            if (flag) {
+                setLight(level, pos, 10);
+            } else if (!lightLevels.isEmpty()) {
+                lightLevels = new HashMap<>();
+                for (SectionPos sectionPos : SectionPos.cube(SectionPos.of(pos), 1).toArray(SectionPos[]::new)) {
+                    setDirty(sectionPos);
+                }
+            }
         }
     }
 }
