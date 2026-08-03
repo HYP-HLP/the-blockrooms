@@ -16,7 +16,7 @@ public class LevelRendererMixin {
     private static int redirectBrightness(LevelRenderer.BrightnessGetter instance, BlockAndTintGetter blockAndTintGetter, BlockPos blockPos) {
         int sky = Brightness.sky(instance.packedBrightness(blockAndTintGetter, blockPos));
         int original = Brightness.block(instance.packedBrightness(blockAndTintGetter, blockPos));
-        int modified = DynamicLightingHandler.getLightWithoutOcclusion(blockAndTintGetter, blockPos);
+        int modified = DynamicLightingHandler.getLightWithOcclusion(blockAndTintGetter, blockPos);
         return Brightness.pack(Math.max(original, modified), sky);
     }
 }

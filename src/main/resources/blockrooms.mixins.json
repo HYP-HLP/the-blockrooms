@@ -1,22 +1,23 @@
 {
-  "required": true,
-  "package": "name.blockrooms.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "ChunkGeneratorMixin",
-    "RecipeCraftingHolderMixin",
-    "ResultSlotInvoker",
-    "ResultSlotMixin",
-    "StructureManagerMixin",
-    "DebugScreenOverlayMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
-  },
-  "client": [
-    "LevelRendererMixin"
-  ]
+    "required": true,
+    "package": "name.blockrooms.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "ChunkGeneratorMixin",
+        "RecipeCraftingHolderMixin",
+        "ResultSlotInvoker",
+        "ResultSlotMixin",
+        "StructureManagerMixin",
+        "DebugScreenOverlayMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
+    },
+    "client": [
+        "EntityRendererMixin",
+        "LevelRendererMixin"
+    ]
 }
