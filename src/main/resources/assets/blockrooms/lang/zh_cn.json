@@ -17,6 +17,7 @@
   "item.blockrooms.string_axe": "线斧",
   "item.blockrooms.detector_torch": "传感火把",
   "item.blockrooms.gunbow": "枪弓",
+  "item.blockrooms.glowstone_lantern": "荧石提灯",
   "key.blockrooms.noclipping": "卡出",
   "container.error_crafting": "error: Compilation Error",
 

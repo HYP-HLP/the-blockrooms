@@ -2,9 +2,15 @@ package name.blockrooms.item;
 
 import name.blockrooms.Blockrooms;
 import name.blockrooms.block.ModBlocks;
+import name.blockrooms.item.impl.GlowstoneLanternItem;
 import name.blockrooms.item.impl.GunBowItem;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
@@ -21,7 +27,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.List;
 
 public class ModItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Blockrooms.MODID);
+    private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Blockrooms.MODID);
     public static final DeferredItem<Item> ALMOND_MILK_BUCKET =
             ITEMS.registerSimpleItem("almond_milk_bucket",
                     properties -> properties.craftRemainder(Items.BUCKET)
@@ -52,6 +58,10 @@ public class ModItems {
             ITEMS.registerSimpleItem("ruby_spear", properties -> properties.spear(ModToolMaterials.RUBY, 1.05F, 1.075F, 0.5F, 3.0F, 7.5F, 6.5F, 5.1F, 10.0F, 4.6F));
     public static final DeferredItem<Item> STRING_AXE =
             ITEMS.registerSimpleItem("string_axe", properties -> properties.axe(ModToolMaterials.STRING, 0.0F, -3.2F));
+    public static final DeferredItem<Item> GLOWSTONE_LANTERN =
+            ITEMS.registerItem("glowstone_lantern", p -> new GlowstoneLanternItem(p, 20),
+                    properties -> properties.stacksTo(1).repairable(tag("repairs_glowstone_lantern")).durability(432)
+                            .component(DataComponents.BREAK_SOUND, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.FIRE_EXTINGUISH)));
 
     public static final DeferredItem<BlockItem> HEATED_IRON_BLOCK =
             ITEMS.registerSimpleBlockItem("heated_iron_block", ModBlocks.HEATED_IRON_BLOCK);
@@ -70,5 +80,8 @@ public class ModItems {
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
+    }
+    public static TagKey<Item> tag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Blockrooms.MODID, name));
     }
 }

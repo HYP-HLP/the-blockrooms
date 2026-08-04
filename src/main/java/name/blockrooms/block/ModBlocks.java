@@ -17,11 +17,11 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModBlocks {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Blockrooms.MODID);
+    private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Blockrooms.MODID);
     public static void register(IEventBus eventBus) { BLOCKS.register(eventBus); }
 
-    public static final DeferredBlock<Block> HEATED_IRON_BLOCK = BLOCKS.registerSimpleBlock(
-            "heated_iron_block",
+    public static final DeferredBlock<Block> HEATED_IRON_BLOCK = BLOCKS.registerBlock(
+            "heated_iron_block", HeatedIronBlock::new,
             properties -> properties.instrument(NoteBlockInstrument.IRON_XYLOPHONE)
                     .mapColor(MapColor.FIRE)
                     .requiresCorrectToolForDrops()
