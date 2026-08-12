@@ -1,5 +1,6 @@
 package name.blockrooms.event;
 
+import name.blockrooms.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -7,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -35,7 +35,7 @@ public class DynamicLightingHandler {
     private static void setLight(BlockAndTintGetter level, BlockPos pos, int i) {
         Map<BlockPos, Integer> newLightLevels = new HashMap<>();
         newLightLevels.put(pos, i);
-        for (int l = i - 1; l > 0; l--) {
+        for (int l = i - 1; l >= (Minecraft.getInstance().options.ambientOcclusion().get() ? 0 : 1); l--) {
             final int lightFilter = l + 1;
             for (BlockPos currentPos : newLightLevels.entrySet().stream().filter(e -> e.getValue() == lightFilter).map(Map.Entry::getKey).toArray(BlockPos[]::new)) {
                 for (Direction dir : Direction.values()) {
@@ -80,8 +80,11 @@ public class DynamicLightingHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         ClientLevel level = Minecraft.getInstance().level;
         if (player != null && level != null) {
-            boolean flag = player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.GLOWSTONE_DUST)
-                    || player.getItemInHand(InteractionHand.OFF_HAND).is(Items.GLOWSTONE_DUST);
+            boolean flag = false;
+            for (InteractionHand hand : InteractionHand.values()) {
+                flag = flag || (player.getItemInHand(hand).is(ModItems.GLOWSTONE_LANTERN)
+                        && !player.getItemInHand(hand).nextDamageWillBreak());
+            }
             BlockPos pos = BlockPos.containing(player.getEyePosition());
             if (flag) {
                 setLight(level, pos, 10);
