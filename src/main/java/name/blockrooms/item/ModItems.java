@@ -74,10 +74,14 @@ public class ModItems {
     public static final DeferredItem<BlockItem> DETECTOR_REDSTONE_LAMP =
             ITEMS.registerSimpleBlockItem("detector_redstone_lamp", ModBlocks.DETECTOR_REDSTONE_LAMP_BLOCK);
     public static final DeferredItem<GunBowItem> GUNBOW =
-            ITEMS.registerItem("gunbow", GunBowItem::new);
+            ITEMS.registerItem("gunbow", properties -> new GunBowItem(properties.stacksTo(1)));
     public static final DeferredItem<BlockItem> QUARTZ_ELEVATOR =
             ITEMS.registerSimpleBlockItem("quartz_elevator", ModBlocks.QUARTZ_ELEVATOR);
 
+    public static final DeferredItem<BlockItem> SOFT_COBBLESTONE =
+            ITEMS.registerSimpleBlockItem("soft_cobblestone", ModBlocks.SOFT_COBBLESTONE);
+    public static final DeferredItem<BlockItem> PROCESSED_SOFT_COBBLESTONE =
+            ITEMS.registerSimpleBlockItem("processed_soft_cobblestone", ModBlocks.PROCESSED_SOFT_COBBLESTONE);
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

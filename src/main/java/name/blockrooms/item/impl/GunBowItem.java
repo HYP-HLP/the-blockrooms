@@ -107,7 +107,7 @@ public class GunBowItem extends Item {
             MinecartTNT tnt = new TNTMinecartProjectile(EntityType.TNT_MINECART, level);
             shootEntity(level, player, tnt, 1, 0.0f);
         }else if(ammo.getItem() instanceof BlockItem && ammo.getItem().equals(Items.TNT)) {
-            PrimedTnt tnt = new PrimedTnt(level, player.getX(), player.getEyeY() - 0.1f, player.getZ(), player);
+            PrimedTnt tnt = new TNTProjectile(level, player.getX(), player.getEyeY() - 0.1f, player.getZ(), player);
             shootEntity(level, player, tnt, 1, 0.0f);
         }else {
             Projectile projectile = createProjectileForAmmo(level, player, gunbow, ammo);

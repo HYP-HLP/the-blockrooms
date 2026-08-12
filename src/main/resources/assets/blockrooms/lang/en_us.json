@@ -20,7 +20,9 @@
   "item.blockrooms.glowstone_lantern": "Glowstone Lantern",
   "key.blockrooms.noclipping": "Noclipping",
   "container.error_crafting": "error: Compilation Error",
-
+  "gui.in_blockrooms": "Blockrooms 1.ψ.5",
+  "entity.blockrooms.bloodthirsty_zombie": "Blood-Thirsty Zombie",
+  "blockrooms.music.blocklevel7.dragon_fish": "C418 - Dragon Fish",
   "blockrooms.music.menu.beginning": "C418 - Beginning",
   "blockrooms.configuration.title": "The Blockrooms Configs",
   "blockrooms.configuration.section.blockrooms.common.toml": "The Blockrooms Configs",

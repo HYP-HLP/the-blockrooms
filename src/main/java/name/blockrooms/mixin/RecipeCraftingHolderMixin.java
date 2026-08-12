@@ -12,7 +12,6 @@ import java.util.Collection;
 
 @Mixin(RecipeCraftingHolder.class)
 public interface RecipeCraftingHolderMixin extends RecipeCraftingHolder {
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
             method = "awardUsedRecipes",
             at = @At(

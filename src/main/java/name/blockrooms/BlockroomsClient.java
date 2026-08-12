@@ -3,6 +3,7 @@ package name.blockrooms;
 import name.blockrooms.client.renderer.BlockProjectileRenderer;
 import name.blockrooms.client.renderer.ItemProjectileRenderer;
 import name.blockrooms.entity.ModEntities;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -12,6 +13,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
 @Mod(value = Blockrooms.MODID, dist = Dist.CLIENT)
@@ -36,5 +38,12 @@ public class BlockroomsClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLOCK_PROJECTILE.get(), BlockProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ITEM_PROJECTILE.get(), ItemProjectileRenderer::new);
+        // 嗜血僵尸：直接用原版僵尸渲染器（模型 + 纹理均为原版僵尸）
+        event.registerEntityRenderer(ModEntities.BLOODTHIRSTY_ZOMBIE.get(), ZombieRenderer::new);
+    }
+
+    @SubscribeEvent // on the mod event bus
+    public static void gatherData(GatherDataEvent.Client event) {
+        // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
     }
 }
