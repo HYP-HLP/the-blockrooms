@@ -3,23 +3,32 @@ package name.blockrooms.world.generator;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.tags.PaintingVariantTags;
+import net.minecraft.util.Util;
+import net.minecraft.world.entity.decoration.painting.Painting;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.StreamSupport;
 
 public class BlockLevel0Generator extends BaseBlockLevelGenerator {
     public static final MapCodec<BlockLevel0Generator> CODEC = RecordCodecBuilder.mapCodec(instance ->
@@ -27,6 +36,19 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(BlockLevel0Generator::getBiomeSource)
             ).apply(instance, BlockLevel0Generator::new)
     );
+
+    /** 据点生成范围：世界中心 128 个区块（=2048 格） */
+    private static final int STRUCTURE_RANGE = 128 * 16;
+
+    /** 变异区域概率：灯熄灭 / 地毯断开 / 天花板大洞 */
+    private static final double LAMP_OFF_CHANCE = 0.10;
+    private static final double CARPET_GAP_CHANCE = 0.10;
+    private static final double CEILING_HOLE_CHANCE = 0.05;
+    /** 墙上挂画概率 */
+    private static final double PAINTING_CHANCE = 0.02;
+
+    /** 据点位置的种子偏移常量 */
+    private static final long OUTPOST_SEED_XOR = 0xB3E62F0A5D1C4E39L;
 
     public BlockLevel0Generator(BiomeSource biomeSource) {
         super(biomeSource);
@@ -81,15 +103,135 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
                 }
             }
         }
+
+        long seed = worldGenRegion.getSeed();
+        // 变异区域：部分灯熄灭 / 地毯断开 / 天花板大洞
+        applyVariantRegions(seed, chunk);
+        // B.M.E.G. 据点已注册为结构（blockrooms:bmeg_outpost），在 FEATURES 阶段生成，可用 /locate 寻找
     }
 
     @Override
     public void spawnOriginalMobs(WorldGenRegion worldGenRegion) {
-
+        placePaintings(worldGenRegion);
     }
 
     @Override
     public int getBaseHeight(int i, int i1, Heightmap.Types types, LevelHeightAccessor levelHeightAccessor, RandomState randomState) {
         return 0;
     }
+
+    /** 由维度种子派生的唯一 B.M.E.G. 据点位置，限定在世界中心 128 个区块（2048 格）内 */
+    public static BlockPos outpostCenter(long seed) {
+        Random random = new Random(seed ^ OUTPOST_SEED_XOR);
+        int x = random.nextInt(STRUCTURE_RANGE * 2) - STRUCTURE_RANGE;
+        int z = random.nextInt(STRUCTURE_RANGE * 2) - STRUCTURE_RANGE;
+        return new BlockPos(x, 2, z);
+    }
+
+    /**
+     * 变异区域后处理：
+     * - 部分红石灯熄灭（并撤掉上方充能的红石块）
+     * - 部分区域地毯断开，露出橡木地板
+     * - 天花板暴露出 2x2 大洞，洞后为基岩
+     */
+    private static void applyVariantRegions(long seed, ChunkAccess chunk) {
+        int chunkX = chunk.getPos().x;
+        int chunkZ = chunk.getPos().z;
+        Random random = new Random(seed ^ (chunkX * 0x9e3779b97f4a7c15L) ^ (chunkZ * 0xdefacedddeedbeefL));
+
+        boolean lampsOff = random.nextDouble() < LAMP_OFF_CHANCE;
+        boolean carpetGaps = random.nextDouble() < CARPET_GAP_CHANCE;
+        boolean ceilingHole = random.nextDouble() < CEILING_HOLE_CHANCE;
+        if (!lampsOff && !carpetGaps && !ceilingHole) return;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                if (lampsOff) {
+                    BlockPos lampPos = new BlockPos(x, 5, z);
+                    BlockState lamp = chunk.getBlockState(lampPos);
+                    if (lamp.is(Blocks.REDSTONE_LAMP)) {
+                        chunk.setBlockState(lampPos, lamp.setValue(RedstoneLampBlock.LIT, false), Block.UPDATE_CLIENTS);
+                        chunk.setBlockState(new BlockPos(x, 6, z), Blocks.STONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    }
+                }
+                if (carpetGaps && random.nextDouble() < 0.25) {
+                    BlockPos carpetPos = new BlockPos(x, 1, z);
+                    if (chunk.getBlockState(carpetPos).is(Blocks.BROWN_CARPET)) {
+                        chunk.setBlockState(carpetPos, Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    }
+                }
+            }
+        }
+
+        if (ceilingHole) {
+            // 随机位置挖出 2x2 的天花板大洞，露出洞后方的基岩
+            int holeX = random.nextInt(14);
+            int holeZ = random.nextInt(14);
+            for (int dx = 0; dx < 2; dx++) {
+                for (int dz = 0; dz < 2; dz++) {
+                    int bx = holeX + dx;
+                    int bz = holeZ + dz;
+                    if (chunk.getBlockState(new BlockPos(bx, 5, bz)).is(Blocks.REDSTONE_LAMP)) {
+                        chunk.setBlockState(new BlockPos(bx, 6, bz), Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    }
+                    chunk.setBlockState(new BlockPos(bx, 5, bz), Blocks.CAVE_AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            }
+        }
+    }
+
+    /**
+     * 在墙上随机生成画（原版 1x1 画实体），挂在 y=2..3 的墙上。
+     */
+    private static void placePaintings(WorldGenRegion region) {
+        ChunkAccess chunk = region.getChunk(region.getCenter().x, region.getCenter().z);
+        List<Holder<PaintingVariant>> smallVariants = StreamSupport.stream(region.registryAccess()
+                .lookupOrThrow(Registries.PAINTING_VARIANT)
+                .getTagOrEmpty(PaintingVariantTags.PLACEABLE)
+                                .spliterator()
+                ,false)
+                .filter(variant -> variant.value().width() == 1 && variant.value().height() == 1)
+                .toList();
+        if (smallVariants.isEmpty()) return;
+
+        int minBlockX = chunk.getPos().getMinBlockX();
+        int minBlockZ = chunk.getPos().getMinBlockZ();
+
+        for (int y = 2; y <= 3; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if (!chunk.getBlockState(pos).isAir()) continue;
+
+                    for (Direction dir : Direction.Plane.HORIZONTAL) {
+                        // 墙必须在当前区块内：本地坐标越界会被 chunk.getBlockState 按 &15 环绕成对面的方块，
+                        // 且世界生成阶段不能对区块外的碰撞查询（会抛 IllegalStateException）
+                        int wx = x + dir.getStepX();
+                        int wz = z + dir.getStepZ();
+                        if (wx < 0 || wx > 15 || wz < 0 || wz > 15) continue;
+                        BlockPos wallPos = new BlockPos(wx, y, wz);
+                        if (!chunk.getBlockState(wallPos).is(Blocks.CHISELED_SANDSTONE)) continue;
+                        // 墙后方也必须是空气，避免画挂在墙的夹缝里
+                        int bx = wx + dir.getStepX();
+                        int bz = wz + dir.getStepZ();
+                        if (bx < 0 || bx > 15 || bz < 0 || bz > 15) continue;
+                        if (!chunk.getBlockState(new BlockPos(bx, y, bz)).isAir()) continue;
+
+                        if (region.getRandom().nextDouble() > PAINTING_CHANCE) continue;
+
+                        Optional<Holder<PaintingVariant>> variant = Util.getRandomSafe(smallVariants, region.getRandom());
+                        if (variant.isEmpty()) continue;
+                        // 画实体必须以画占据的空气格为位置（面朝房间），
+                        // 不能以墙格为位置：原版 survives() 会检测该格的碰撞盒与后方墙面，
+                        // 以墙格为位置会导致每 tick 判定不存活而掉落成物品
+                        Painting painting = new Painting(region.getLevel(),
+                                new BlockPos(minBlockX + x, y, minBlockZ + z), dir.getOpposite(), variant.get());
+                        region.addFreshEntity(painting);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -25,6 +25,13 @@ public class ModEntities {
             ENTITY_TYPES.register("block_projectile", id ->
                     EntityType.Builder.<BlockProjectile>of(BlockProjectile::new, MobCategory.MISC).sized(1.0f,1.0f).build(entityId(id)));
 
+    /** 嗜血僵尸：画廊维度怪物，模型/渲染沿用原版僵尸（见 BlockroomsClient） */
+    public static final DeferredHolder<EntityType<?>, EntityType<BloodthirstyZombie>> BLOODTHIRSTY_ZOMBIE =
+            ENTITY_TYPES.register("bloodthirsty_zombie", id ->
+                    EntityType.Builder.<BloodthirstyZombie>of(BloodthirstyZombie::new, MobCategory.MONSTER)
+                            .sized(0.6F, 1.95F)
+                            .build(entityId(id)));
+
 
     public static void register(IEventBus bus){
         ENTITY_TYPES.register(bus);

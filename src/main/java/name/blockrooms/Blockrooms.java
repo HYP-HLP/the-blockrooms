@@ -1,28 +1,31 @@
 package name.blockrooms;
 
+import com.mojang.logging.LogUtils;
 import name.blockrooms.block.ModBlocks;
 import name.blockrooms.block.recipe.ModRecipeTypes;
+import name.blockrooms.entity.BloodthirstyZombie;
 import name.blockrooms.entity.ModEntities;
-import name.blockrooms.event.BlockLevel4Handler;
-import name.blockrooms.event.NoclipHandler;
-import name.blockrooms.event.RubyTransHandler;
+import name.blockrooms.event.*;
 import name.blockrooms.item.ModCreativeModeTabs;
 import name.blockrooms.item.ModItems;
 import name.blockrooms.item.components.ModDataComponents;
 import name.blockrooms.sounds.ModSounds;
 import name.blockrooms.world.generator.ModGenerators;
-import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
+import name.blockrooms.world.structure.ModStructures;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import org.slf4j.Logger;
 
 @Mod(Blockrooms.MODID)
 public class Blockrooms {
@@ -31,6 +34,8 @@ public class Blockrooms {
 
     public Blockrooms(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerPlacements);
+        modEventBus.addListener(this::registerEntityAttributes);
 
         ModRecipeTypes.register(modEventBus);
         ModBlocks.register(modEventBus);
@@ -40,6 +45,7 @@ public class Blockrooms {
         ModGenerators.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModStructures.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         // Register ourselves for server and other game events we are interested in.
@@ -50,21 +56,25 @@ public class Blockrooms {
         NeoForge.EVENT_BUS.register(new RubyTransHandler());
         NeoForge.EVENT_BUS.register(new NoclipHandler());
         NeoForge.EVENT_BUS.register(new BlockLevel4Handler());
+        NeoForge.EVENT_BUS.register(new PaintingPortalHandler());
+        NeoForge.EVENT_BUS.register(new GalleryExitHandler());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // LOGGER.info("HELLO FROM COMMON SETUP");
+        // 嗜血僵尸的生成放置规则：地面 + 任意光照（画廊靠灯笼照明，
+        // 常规的"黑暗"判定会拒绝生成）
+    }
 
-        /*
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
-
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
-
-         */
+    private void registerPlacements(RegisterSpawnPlacementsEvent event){
+        event.register(ModEntities.BLOODTHIRSTY_ZOMBIE.get(),
+                SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkAnyLightMonsterSpawnRules,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE);
+    }
+    /** 注册实体属性（生命/攻击/移速来自 Config，见 Config.java） */
+    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(ModEntities.BLOODTHIRSTY_ZOMBIE.get(), BloodthirstyZombie.createAttributes().build());
     }
 
     @SubscribeEvent

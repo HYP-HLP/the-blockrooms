@@ -11,16 +11,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
-import java.util.Objects;
-import java.util.Set;
+import static name.blockrooms.util.TeleportUtils.teleportPlayer;
 
 public class NoclipHandler {
     public record levelWithChance(ResourceKey<Level> level, double chance) {}
     private static final FlexibleMap<ResourceKey<Level>, BlockState, levelWithChance> noclipMap = new FlexibleMap<>();
-    @SuppressWarnings("UnusedReturnValue")
-    private static boolean teleportPlayer(ServerPlayer player, ResourceKey<Level> level, double x, double y, double z) {
-        return player.teleportTo(Objects.requireNonNull(player.level().getServer().getLevel(level)), x, y, z, Set.of(), player.getYRot(), player.getXRot(), true);
-    }
+
 
     public static void noclipByCondition(ServerPlayer player, BlockState state) {
         levelWithChance destination = noclipMap.get(player.level().dimension(), state);

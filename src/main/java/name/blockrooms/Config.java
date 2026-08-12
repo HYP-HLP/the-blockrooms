@@ -21,6 +21,7 @@ public class Config {
             .comment(Component.translatable("blockrooms.configuration.ruby_trans_time_comment").getString())
             .defineInRange("ruby_trans_time", 60 * 20, 0, Integer.MAX_VALUE);
 
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {

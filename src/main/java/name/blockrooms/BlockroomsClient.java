@@ -3,6 +3,7 @@ package name.blockrooms;
 import name.blockrooms.client.renderer.BlockProjectileRenderer;
 import name.blockrooms.client.renderer.ItemProjectileRenderer;
 import name.blockrooms.entity.ModEntities;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -37,6 +38,8 @@ public class BlockroomsClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLOCK_PROJECTILE.get(), BlockProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ITEM_PROJECTILE.get(), ItemProjectileRenderer::new);
+        // 嗜血僵尸：直接用原版僵尸渲染器（模型 + 纹理均为原版僵尸）
+        event.registerEntityRenderer(ModEntities.BLOODTHIRSTY_ZOMBIE.get(), ZombieRenderer::new);
     }
 
     @SubscribeEvent // on the mod event bus
