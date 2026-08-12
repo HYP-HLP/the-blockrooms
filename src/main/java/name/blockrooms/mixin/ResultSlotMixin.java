@@ -3,11 +3,11 @@ package name.blockrooms.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import name.blockrooms.block.inventory.ErrorCraftingMenu;
 import name.blockrooms.block.recipe.ModRecipeTypes;
+import name.blockrooms.effect.ModMobEffects;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("UnresolvedMixinReference")
 @Mixin(ResultSlot.class)
 public abstract class ResultSlotMixin extends Slot implements ResultSlotInvoker {
     public ResultSlotMixin(Container container, int slot, int x, int y) {
@@ -47,7 +46,7 @@ public abstract class ResultSlotMixin extends Slot implements ResultSlotInvoker 
     public void onTake(Player player, ItemStack stack, CallbackInfo ci) {
         if (player != null && player.containerMenu instanceof ErrorCraftingMenu
                 && player.getRandom().nextDouble() <= 0.05) {
-            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 300, 0));
+            player.addEffect(new MobEffectInstance(ModMobEffects.TREMBLING, 300, 2));
         }
     }
 }

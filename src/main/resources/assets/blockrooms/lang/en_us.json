@@ -18,12 +18,15 @@
   "item.blockrooms.detector_torch": "Detector Torch",
   "item.blockrooms.gunbow": "Gunbow",
   "item.blockrooms.glowstone_lantern": "Glowstone Lantern",
+  "entity.blockrooms.blood_zombie": "Blood Zombie",
+  "effect.blockrooms.trembling": "Trembling",
+
   "key.blockrooms.noclipping": "Noclipping",
   "container.error_crafting": "error: Compilation Error",
-  "gui.in_blockrooms": "Blockrooms 1.ψ.5",
-  "entity.blockrooms.bloodthirsty_zombie": "Blood-Thirsty Zombie",
-  "blockrooms.music.blocklevel7.dragon_fish": "C418 - Dragon Fish",
+  "gui.in_blockrooms": "Minecraft 1.ψ.5 (1.ψ.5/The Blockrooms)",
+
   "blockrooms.music.menu.beginning": "C418 - Beginning",
+
   "blockrooms.configuration.title": "The Blockrooms Configs",
   "blockrooms.configuration.section.blockrooms.common.toml": "The Blockrooms Configs",
   "blockrooms.configuration.section.blockrooms.common.toml.title": "The Blockrooms Configs",

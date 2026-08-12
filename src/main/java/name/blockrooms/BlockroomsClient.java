@@ -39,7 +39,7 @@ public class BlockroomsClient {
         event.registerEntityRenderer(ModEntities.BLOCK_PROJECTILE.get(), BlockProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ITEM_PROJECTILE.get(), ItemProjectileRenderer::new);
         // 嗜血僵尸：直接用原版僵尸渲染器（模型 + 纹理均为原版僵尸）
-        event.registerEntityRenderer(ModEntities.BLOODTHIRSTY_ZOMBIE.get(), ZombieRenderer::new);
+        event.registerEntityRenderer(ModEntities.BLOOD_ZOMBIE.get(), ZombieRenderer::new);
     }
 
     @SubscribeEvent // on the mod event bus

@@ -8,15 +8,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.List;
 
+@EventBusSubscriber
 public class RubyTransHandler {
     private static final String TIMER_KEY = "ruby_trans_timer";
 
     @SubscribeEvent
-    public void onItemEntityTick(EntityTickEvent.Pre event) {
+    public static void onItemEntityTick(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ItemEntity item)) return;
         if (!item.getItem().is(Items.EMERALD)) return;
 

@@ -18,12 +18,15 @@
   "item.blockrooms.detector_torch": "传感火把",
   "item.blockrooms.gunbow": "枪弓",
   "item.blockrooms.glowstone_lantern": "荧石提灯",
+  "entity.blockrooms.blood_zombie": "嗜血僵尸",
+  "effect.blockrooms.trembling": "合成失败诅咒",
+
   "key.blockrooms.noclipping": "卡出",
   "container.error_crafting": "error: Compilation Error",
-  "gui.in_blockrooms": "Blockrooms 1.ψ.5",
+  "gui.in_blockrooms": "Minecraft 1.ψ.5 (1.ψ.5/The Blockrooms)",
+
   "blockrooms.music.menu.beginning": "C418 - Beginning",
-  "blockrooms.music.blocklevel7.dragon_fish": "C418 - Dragon Fish",
-  "entity.blockrooms.bloodthirsty_zombie": "嗜血僵尸",
+
   "blockrooms.configuration.title": "块室模组配置",
   "blockrooms.configuration.section.blockrooms.common.toml": "配置块室模组",
   "blockrooms.configuration.section.blockrooms.common.toml.title": "配置块室模组",

@@ -22,5 +22,13 @@
                 "stream": true
             }
         ]
+    },
+    "music.blockrooms.blocklevel7": {
+        "sounds": [
+            {
+                "name": "music/game/water/dragon_fish",
+                "stream": true
+            }
+        ]
     }
 }

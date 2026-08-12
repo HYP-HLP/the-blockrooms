@@ -7,6 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+@SuppressWarnings("unused")
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, Blockrooms.MODID);
 
@@ -14,7 +15,5 @@ public class ModSounds {
             SOUNDS.register("music.beginning", SoundEvent::createVariableRangeEvent);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOCKLEVEL1 =
             SOUNDS.register("music.blockrooms.blocklevel1", SoundEvent::createVariableRangeEvent);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCKLEVEL7_DRAGON_FISH =
-            SOUNDS.register("music.blockrooms.blocklevel7.dragon_fish", SoundEvent::createVariableRangeEvent);
     public static void register(IEventBus eventBus) { SOUNDS.register(eventBus); }
 }
