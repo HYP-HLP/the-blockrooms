@@ -1,4 +1,4 @@
-package name.blockrooms.event;
+package name.blockrooms.event.level;
 
 import name.blockrooms.Blockrooms;
 import name.blockrooms.util.ModLevels;

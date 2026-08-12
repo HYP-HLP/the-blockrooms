@@ -77,13 +77,15 @@ public class ModBlocks {
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
                     .strength(0.8F));
-    public static final DeferredBlock<Block> SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock("soft_cobblestone",
+    public static final DeferredBlock<Block> SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock(
+            "soft_cobblestone",
             properties -> properties.mapColor(MapColor.STONE)
                     .requiresCorrectToolForDrops()
                     .mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
                     .strength(2.0F, 6.0F)
     );
-    public static final DeferredBlock<Block> PROCESSED_SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock("processed_soft_cobblestone",
+    public static final DeferredBlock<Block> PROCESSED_SOFT_COBBLESTONE = BLOCKS.registerSimpleBlock(
+            "processed_soft_cobblestone",
             properties -> properties.mapColor(MapColor.STONE)
                     .requiresCorrectToolForDrops()
                     .mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)

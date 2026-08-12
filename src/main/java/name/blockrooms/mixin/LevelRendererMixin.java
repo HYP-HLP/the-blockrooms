@@ -1,6 +1,6 @@
 package name.blockrooms.mixin;
 
-import name.blockrooms.event.DynamicLightingHandler;
+import name.blockrooms.event.client.DynamicLightingHandler;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Brightness;

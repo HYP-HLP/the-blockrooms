@@ -1,4 +1,4 @@
-package name.blockrooms.event;
+package name.blockrooms.event.client;
 
 import name.blockrooms.item.ModItems;
 import net.minecraft.client.Minecraft;
