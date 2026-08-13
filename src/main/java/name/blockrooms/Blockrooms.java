@@ -54,8 +54,6 @@ public class Blockrooms {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // 嗜血僵尸的生成放置规则：地面 + 任意光照（画廊靠灯笼照明，
-        // 常规的"黑暗"判定会拒绝生成）
     }
 
     private void registerPlacements(RegisterSpawnPlacementsEvent event){
@@ -65,7 +63,6 @@ public class Blockrooms {
                 Monster::checkAnyLightMonsterSpawnRules,
                 RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
-    /** 注册实体属性（生命/攻击/移速来自 Config，见 Config.java） */
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.BLOOD_ZOMBIE.get(), BloodZombie.createAttributes().build());
     }
