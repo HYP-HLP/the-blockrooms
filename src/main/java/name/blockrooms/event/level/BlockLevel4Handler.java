@@ -1,4 +1,4 @@
-package name.blockrooms.event;
+package name.blockrooms.event.level;
 
 import name.blockrooms.Blockrooms;
 import name.blockrooms.util.ModLevels;
@@ -21,17 +21,19 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
+@EventBusSubscriber
 public class BlockLevel4Handler {
     private static final ResourceKey<LootTable> DROP_IDENTIFIER =
             ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Blockrooms.MODID, "gameplay/blocklevel4_drop"));
 
     @SubscribeEvent
-    public void onBlockDrop(BlockDropsEvent event) {
+    public static void onBlockDrop(BlockDropsEvent event) {
         ServerLevel level = event.getLevel();
         boolean hasSilkTouch = event.getTool().getEnchantmentLevel(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)) > 0;
         if (level.dimension() == ModLevels.BLOCKLEVEL_4 && !hasSilkTouch) {
@@ -52,7 +54,7 @@ public class BlockLevel4Handler {
     }
 
     @SubscribeEvent
-    public void onLivingDamage(LivingDamageEvent.Pre event) {
+    public static void onLivingDamage(LivingDamageEvent.Pre event) {
         if (event.getEntity().level() instanceof ServerLevel level && level.dimension() == ModLevels.BLOCKLEVEL_4
                 && event.getEntity() instanceof Monster && !(level.getDayTime() % 24000 < 13000)) {
             if (!(event.getSource().getEntity() instanceof ServerPlayer player && player.isCreative())) {
@@ -62,7 +64,7 @@ public class BlockLevel4Handler {
     }
 
     @SubscribeEvent
-    public void onEffectAdded(MobEffectEvent.Added event) {
+    public static void onEffectAdded(MobEffectEvent.Added event) {
         if (event.getEntity().level().dimension() == ModLevels.BLOCKLEVEL_4
                 && event.getEntity() instanceof Player player) {
             MobEffectInstance effect = event.getEffectInstance();
@@ -76,7 +78,7 @@ public class BlockLevel4Handler {
     }
 
     @SubscribeEvent
-    public void onEntityLeavingLevel(EntityLeaveLevelEvent event) {
+    public static void onEntityLeavingLevel(EntityLeaveLevelEvent event) {
         if (event.getLevel().dimension() == ModLevels.BLOCKLEVEL_4
                 && event.getEntity() instanceof LivingEntity entity
                 && entity.getEffect(MobEffects.POISON) != null) {

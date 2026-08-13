@@ -38,9 +38,7 @@ public class BlockLevel0OutpostPiece extends StructurePiece {
     }
 
     @Override
-    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
-        // 位置信息已由基类序列化的边界框承载，无需额外数据
-    }
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {}
 
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator,

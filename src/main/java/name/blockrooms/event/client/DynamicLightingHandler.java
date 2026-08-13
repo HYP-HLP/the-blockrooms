@@ -1,4 +1,4 @@
-package name.blockrooms.event;
+package name.blockrooms.event.client;
 
 import name.blockrooms.item.ModItems;
 import net.minecraft.client.Minecraft;
@@ -19,6 +19,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class DynamicLightingHandler {
@@ -32,9 +33,9 @@ public class DynamicLightingHandler {
         return 0;
     }
 
-    private static void setLight(BlockAndTintGetter level, BlockPos pos, int i) {
+    private static void setLight(BlockAndTintGetter level, Set<BlockPos> sources, int i) {
         Map<BlockPos, Integer> newLightLevels = new HashMap<>();
-        newLightLevels.put(pos, i);
+        for (BlockPos pos : sources) newLightLevels.put(pos, i);
         for (int l = i - 1; l >= (Minecraft.getInstance().options.ambientOcclusion().get() ? 0 : 1); l--) {
             final int lightFilter = l + 1;
             for (BlockPos currentPos : newLightLevels.entrySet().stream().filter(e -> e.getValue() == lightFilter).map(Map.Entry::getKey).toArray(BlockPos[]::new)) {
@@ -87,7 +88,7 @@ public class DynamicLightingHandler {
             }
             BlockPos pos = BlockPos.containing(player.getEyePosition());
             if (flag) {
-                setLight(level, pos, 10);
+                setLight(level, Set.of(pos), 10);
             } else if (!lightLevels.isEmpty()) {
                 lightLevels = new HashMap<>();
                 for (SectionPos sectionPos : SectionPos.cube(SectionPos.of(pos), 1).toArray(SectionPos[]::new)) {

@@ -2,6 +2,8 @@ package name.blockrooms.world.generator;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import name.blockrooms.event.level.GalleryExitHandler;
+import name.blockrooms.event.level.PaintingPortalHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -43,10 +45,10 @@ import java.util.stream.StreamSupport;
  * <ul>
  *   <li>一条由橡木木板构成的<b>无限长走廊</b>，走廊两边挂满了画</li>
  *   <li>有些画可以穿过（像 BlockLevel 0），穿过后会来到一个和普通画廊无异的地方，
- *       同时原本的画也会突然消失（见 {@link name.blockrooms.event.PaintingPortalHandler}）</li>
+ *       同时原本的画也会突然消失（见 {@link PaintingPortalHandler}）</li>
  *   <li>走廊中不断响起活塞推拉的声音（由 biome 的环境音循环提供）</li>
  *   <li>随机出现空的物品展示框；极稀有的带画展示框是出口——
- *       转动上面的画可回到 BlockLevel 0（见 {@link name.blockrooms.event.GalleryExitHandler}），
+ *       转动上面的画可回到 BlockLevel 0（见 {@link GalleryExitHandler}），
  *       出口旁有"像火把一样的光源"（探员日志线索）</li>
  *   <li>没有怪物</li>
  * </ul>

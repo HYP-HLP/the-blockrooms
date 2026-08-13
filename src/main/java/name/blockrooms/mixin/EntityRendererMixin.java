@@ -1,7 +1,7 @@
 package name.blockrooms.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import name.blockrooms.event.DynamicLightingHandler;
+import name.blockrooms.event.client.DynamicLightingHandler;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.core.BlockPos;

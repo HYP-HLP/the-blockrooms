@@ -3,7 +3,8 @@ package name.blockrooms;
 import com.mojang.logging.LogUtils;
 import name.blockrooms.block.ModBlocks;
 import name.blockrooms.block.recipe.ModRecipeTypes;
-import name.blockrooms.entity.BloodthirstyZombie;
+import name.blockrooms.effect.ModMobEffects;
+import name.blockrooms.entity.BloodZombie;
 import name.blockrooms.entity.ModEntities;
 import name.blockrooms.event.*;
 import name.blockrooms.item.ModCreativeModeTabs;
@@ -37,6 +38,7 @@ public class Blockrooms {
         modEventBus.addListener(this::registerPlacements);
         modEventBus.addListener(this::registerEntityAttributes);
 
+        ModMobEffects.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
@@ -48,16 +50,7 @@ public class Blockrooms {
         ModStructures.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
-        // Register ourselves for server and other game events we are interested in.
-        // Note that this is necessary if and only if we want *this* class (Blockrooms) to respond directly to events.
-        // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
-
-        NeoForge.EVENT_BUS.register(new RubyTransHandler());
-        NeoForge.EVENT_BUS.register(new NoclipHandler());
-        NeoForge.EVENT_BUS.register(new BlockLevel4Handler());
-        NeoForge.EVENT_BUS.register(new PaintingPortalHandler());
-        NeoForge.EVENT_BUS.register(new GalleryExitHandler());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -66,7 +59,7 @@ public class Blockrooms {
     }
 
     private void registerPlacements(RegisterSpawnPlacementsEvent event){
-        event.register(ModEntities.BLOODTHIRSTY_ZOMBIE.get(),
+        event.register(ModEntities.BLOOD_ZOMBIE.get(),
                 SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkAnyLightMonsterSpawnRules,
@@ -74,7 +67,7 @@ public class Blockrooms {
     }
     /** 注册实体属性（生命/攻击/移速来自 Config，见 Config.java） */
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModEntities.BLOODTHIRSTY_ZOMBIE.get(), BloodthirstyZombie.createAttributes().build());
+        event.put(ModEntities.BLOOD_ZOMBIE.get(), BloodZombie.createAttributes().build());
     }
 
     @SubscribeEvent

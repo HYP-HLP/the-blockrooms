@@ -1,4 +1,4 @@
-package name.blockrooms.event;
+package name.blockrooms.event.client;
 
 import name.blockrooms.block.ModBlocks;
 import name.blockrooms.client.key.ModKeyBindings;

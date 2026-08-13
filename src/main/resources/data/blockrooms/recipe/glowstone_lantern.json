@@ -1,0 +1,17 @@
+{
+    "type": "blockrooms:crafting_error",
+    "category": "misc",
+    "key": {
+        "#": "minecraft:burn_pottery_sherd",
+        "X": "#c:nuggets/iron"
+    },
+    "pattern": [
+        "XXX",
+        "X#X",
+        "XXX"
+    ],
+    "result": {
+        "count": 1,
+        "id": "blockrooms:glowstone_lantern"
+    }
+}
