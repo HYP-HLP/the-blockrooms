@@ -50,8 +50,7 @@ public class DetectorRedstoneLampBlock extends RedstoneLampBlock {
         }
         level.scheduleTick(pos, this, 20);
     }
-
-    private boolean calculateShouldLit(Level level, BlockPos pos) {
+    public boolean calculateShouldLit(Level level, BlockPos pos) {
         if (level.hasNeighborSignal(pos)) {
             return true;
         }

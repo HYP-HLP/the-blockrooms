@@ -15,6 +15,7 @@ public class ModLevels {
         return BLOCKLEVELS.stream().anyMatch(levelResourceKey::equals);
     }
     public static final ResourceKey<Level> BLOCKLEVEL_0 = level("blocklevel0");
+    public static final ResourceKey<Level> BLOCKLEVEL_1 = level("blocklevel1");
     public static final ResourceKey<Level> BLOCKLEVEL_4 = level("blocklevel4");
     public static final ResourceKey<Level> GALLERY = level("the_gallery");
     private static ResourceKey<Level> level(String key) {

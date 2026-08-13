@@ -34,7 +34,7 @@ public class BlockLevel4Handler {
     public void onBlockDrop(BlockDropsEvent event) {
         ServerLevel level = event.getLevel();
         boolean hasSilkTouch = event.getTool().getEnchantmentLevel(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)) > 0;
-        if (level.getRandom().nextDouble() <= 0.4 && level.dimension() == ModLevels.BLOCKLEVEL_4 && !hasSilkTouch) {
+        if (level.dimension() == ModLevels.BLOCKLEVEL_4 && !hasSilkTouch) {
             event.getDrops().clear();
             BlockPos pos = event.getPos();
             LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(DROP_IDENTIFIER);
