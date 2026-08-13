@@ -14,6 +14,7 @@ public class ModLevels {
     //public static final TagKey<Level> IN_BLOCKROOMS = TagKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath(Blockrooms.MODID, "in_blockrooms"));
 
     public static final ResourceKey<Level> BLOCKLEVEL_0 = level("blocklevel0");
+    public static final ResourceKey<Level> BLOCKLEVEL_1 = level("blocklevel1");
     public static final ResourceKey<Level> BLOCKLEVEL_4 = level("blocklevel4");
     public static final ResourceKey<Level> GALLERY = level("the_gallery");
 

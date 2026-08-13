@@ -20,6 +20,10 @@ public class ModStructures {
             STRUCTURE_TYPES.register("bmeg_outpost", () -> structureType(BlockLevel0OutpostStructure.CODEC));
     public static final DeferredHolder<StructurePieceType, StructurePieceType> BMEG_OUTPOST_PIECE_TYPE =
             STRUCTURE_PIECE_TYPES.register("bmeg_outpost_piece", () -> (StructurePieceType.ContextlessType) BlockLevel0OutpostPiece::new);
+    public static final DeferredHolder<StructureType<?>, StructureType<BlockLevel1BetaBaseStructure>> BETA_BASE_TYPE =
+            STRUCTURE_TYPES.register("quartz_beta_base", () -> structureType(BlockLevel1BetaBaseStructure.CODEC));
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> BETA_BASE_PIECE_TYPE =
+            STRUCTURE_PIECE_TYPES.register("quartz_beta_base_piece", () -> (StructurePieceType.ContextlessType) BlockLevel1BetaBasePiece::new);
 
     private static <S extends Structure> StructureType<S> structureType(MapCodec<S> codec) {
         return () -> codec;
