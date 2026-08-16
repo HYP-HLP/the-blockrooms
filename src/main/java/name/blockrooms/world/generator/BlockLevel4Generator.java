@@ -34,7 +34,7 @@ public class BlockLevel4Generator extends NoiseBasedChunkGenerator {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for(int y = -64;y < -50;y++){
-                    chunk.setBlockState(new BlockPos(x, y, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                    chunk.setBlockState(new BlockPos(x, y, z), Blocks.VOID_AIR.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
                 }
                 chunk.setBlockState(new BlockPos(x, -50, z), Blocks.BEDROCK.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
             }

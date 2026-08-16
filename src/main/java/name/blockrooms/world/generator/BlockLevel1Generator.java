@@ -39,11 +39,9 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.StreamSupport;
 
@@ -139,10 +137,10 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
     }
 
     /** 房间类型：石英大厅（主体）/ 石质密室 / 通廊 */
-    private enum RoomType { QUARTZ_HALL, STONE_VAULT, CORRIDOR }
+    public enum RoomType { QUARTZ_HALL, STONE_VAULT, CORRIDOR }
 
     /** 由 (RandomState, 楼层, 区块坐标) 确定房间类型：大厅 60%、密室 15%、通廊 25% */
-    private static RoomType roomType(RandomState randomState, int floor, int chunkX, int chunkZ) {
+    public static RoomType roomType(RandomState randomState, int floor, int chunkX, int chunkZ) {
         double r = bl1Random(randomState, floor, chunkX, chunkZ, 1).nextDouble();
         if (r < 0.60) return RoomType.QUARTZ_HALL;
         if (r < 0.75) return RoomType.STONE_VAULT;
@@ -354,10 +352,10 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
      * </ul>
      * 返回 null 表示该格不写。
      */
-    private static @NonNull BlockState resolveState(int x, int z, int y, int h, RoomType type,
-                                                    boolean corridor, boolean vault,
-                                                    int doorW, int doorE, int doorN, int doorS,
-                                                    List<BlockPos> pillars, boolean topFloor) {
+    private static @Nullable BlockState resolveState(int x, int z, int y, int h, RoomType type,
+                                                     boolean corridor, boolean vault,
+                                                     int doorW, int doorE, int doorN, int doorS,
+                                                     List<BlockPos> pillars, boolean topFloor) {
         // 地板
         if (y == 0) {
             if (vault) return Blocks.STONE.defaultBlockState();
@@ -412,18 +410,16 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
                 }
                 return Blocks.CHISELED_QUARTZ_BLOCK.defaultBlockState();
             }
-            return (x % 3 == 0 && z % 3 == 0) ? dayNightLamp() : Blocks.QUARTZ_BLOCK.defaultBlockState();
+            if (x % 3 == 0 && z % 3 == 0) {
+                return ModBlocks.DETECTOR_REDSTONE_LAMP_BLOCK.get().defaultBlockState().setValue(RedstoneLampBlock.LIT, true);
+            }
+            return Blocks.QUARTZ_BLOCK.defaultBlockState();
         }
 
         // 层顶填充：石英块充当上层地板（挖穿下层天花板即可进入上层）；
         // 最顶层用基岩封顶，防止玩家挖穿天花板进入上方虚空
         if (y <= FLOOR_HEIGHT) return topFloor ? Blocks.BEDROCK.defaultBlockState() : Blocks.QUARTZ_BLOCK.defaultBlockState();
         return null;
-    }
-
-    /** 大厅天花板昼夜灯（初始亮起；昼夜切换由方块自身 tick 驱动） */
-    private static BlockState dayNightLamp() {
-        return ModBlocks.DETECTOR_REDSTONE_LAMP_BLOCK.get().defaultBlockState().setValue(RedstoneLampBlock.LIT, true);
     }
 
     /** 密室/通廊常亮红石灯 */
@@ -463,6 +459,7 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
                 .setValue(WallTorchBlock.FACING, facing);
         chunk.setBlockState(new BlockPos(x, y, z), state, Block.UPDATE_NONE);
     }
+
     private static void placeCorridorDoors(ChunkAccess chunk, RandomState randomState, int floor, int chunkX, int chunkZ, int roomHeight) {
         RandomSource random = bl1Random(randomState, floor, chunkX, chunkZ, 7);
         boolean entranceSouth = random.nextBoolean();

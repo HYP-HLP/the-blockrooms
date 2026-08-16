@@ -33,6 +33,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.QUARTZ_ELEVATOR);
                         output.accept(ModItems.GUNBOW);
                         output.accept(ModItems.GLOWSTONE_LANTERN);
+
+                        output.accept(ModItems.BLOOD_ZOMBIE_SPAWN_EGG);
                     })
                     .build());
     public static void register(IEventBus eventBus) {

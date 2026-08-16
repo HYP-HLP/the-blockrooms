@@ -40,11 +40,9 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
     /** 据点生成范围：世界中心 128 个区块（=2048 格） */
     private static final int STRUCTURE_RANGE = 128 * 16;
 
-    /** 变异区域概率：灯熄灭 / 地毯断开 / 天花板大洞 */
     private static final double LAMP_OFF_CHANCE = 0.10;
     private static final double CARPET_GAP_CHANCE = 0.10;
     private static final double CEILING_HOLE_CHANCE = 0.05;
-    /** 墙上挂画概率 */
     private static final double PAINTING_CHANCE = 0.02;
 
     /** 据点位置的种子偏移常量 */

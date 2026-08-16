@@ -2,6 +2,7 @@ package name.blockrooms.item;
 
 import name.blockrooms.Blockrooms;
 import name.blockrooms.block.ModBlocks;
+import name.blockrooms.entity.ModEntities;
 import name.blockrooms.item.impl.GlowstoneLanternItem;
 import name.blockrooms.item.impl.GunBowItem;
 import net.minecraft.core.Direction;
@@ -13,10 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ClearAllStatusEffectsConsumeEffect;
@@ -63,6 +61,10 @@ public class ModItems {
                     properties -> properties.stacksTo(1).repairable(tag("repairs_glowstone_lantern")).durability(432)
                             .component(DataComponents.BREAK_SOUND, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.FIRE_EXTINGUISH)));
 
+    public static final DeferredItem<SpawnEggItem> BLOOD_ZOMBIE_SPAWN_EGG =
+            ITEMS.registerItem("blood_zombie_spawn_egg", SpawnEggItem::new,
+                    properties -> properties.spawnEgg(ModEntities.BLOOD_ZOMBIE.get()));
+
     public static final DeferredItem<BlockItem> HEATED_IRON_BLOCK =
             ITEMS.registerSimpleBlockItem("heated_iron_block", ModBlocks.HEATED_IRON_BLOCK);
     public static final DeferredItem<BlockItem> ERROR_CRAFTING_TABLE =
@@ -77,11 +79,11 @@ public class ModItems {
             ITEMS.registerItem("gunbow", properties -> new GunBowItem(properties.stacksTo(1)));
     public static final DeferredItem<BlockItem> QUARTZ_ELEVATOR =
             ITEMS.registerSimpleBlockItem("quartz_elevator", ModBlocks.QUARTZ_ELEVATOR);
-
     public static final DeferredItem<BlockItem> SOFT_COBBLESTONE =
             ITEMS.registerSimpleBlockItem("soft_cobblestone", ModBlocks.SOFT_COBBLESTONE);
     public static final DeferredItem<BlockItem> PROCESSED_SOFT_COBBLESTONE =
             ITEMS.registerSimpleBlockItem("processed_soft_cobblestone", ModBlocks.PROCESSED_SOFT_COBBLESTONE);
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

@@ -43,7 +43,6 @@ public abstract class BaseBlockLevelGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
-
+    public void addDebugScreenInfo(List<String> list, RandomState random, BlockPos pos) {
     }
 }
