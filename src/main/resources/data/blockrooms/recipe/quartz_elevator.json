@@ -1,6 +1,5 @@
 {
     "type": "blockrooms:crafting_error",
-    "category": "misc",
     "key": {
         "#": "#c:ender_pearls",
         "X": "minecraft:chiseled_quartz_block"

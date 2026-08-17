@@ -32,7 +32,7 @@
         "misc": [],
         "monster": [
             {
-                "type": "blockrooms:bloodthirsty_zombie",
+                "type": "blockrooms:blood_zombie",
                 "weight": 100,
                 "minCount": 1,
                 "maxCount": 3

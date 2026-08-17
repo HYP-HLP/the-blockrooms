@@ -12,10 +12,11 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ChunkEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @EventBusSubscriber
 public class BlockLevel1LightHandler {
@@ -30,7 +31,7 @@ public class BlockLevel1LightHandler {
         loadedChunks.add(event.getChunk().getPos());
 
         boolean isDay = level.getDayTime() % 24000 < 13000;
-        if (wasDay ^ isDay) handleLit(event.getChunk(), isDay);
+        handleLit(event.getChunk(), isDay);
     }
 
     @SubscribeEvent
@@ -40,7 +41,18 @@ public class BlockLevel1LightHandler {
     }
 
     @SubscribeEvent
-    public static void onServerTick(LevelTickEvent.Pre event) {
+    public static void onServerStarted(ServerStartedEvent event) {
+        Level level = event.getServer().getLevel(ModLevels.BLOCKLEVEL_1);
+        if (level != null) wasDay = level.getDayTime() % 24000 < 13000;
+    }
+
+    @SubscribeEvent
+    public static void onServerStopped(ServerStoppedEvent event) {
+        loadedChunks.clear();
+    }
+
+    @SubscribeEvent
+    public static void onDayNightChanged(LevelTickEvent.Pre event) {
         Level level = event.getLevel();
         if (!level.dimension().equals(ModLevels.BLOCKLEVEL_1)) return;
         boolean isDay = level.getDayTime() % 24000 < 13000;
@@ -54,8 +66,7 @@ public class BlockLevel1LightHandler {
     }
 
     private static void handleLit(Level level, boolean isDay) {
-        Blockrooms.LOGGER.info("Got loaded chunk set with size {}", loadedChunks.size());
-        for (ChunkPos chunkPos : loadedChunks) {
+        for (ChunkPos chunkPos : new HashSet<>(loadedChunks)) {
             LevelChunk chunk = level.getChunk(chunkPos.x, chunkPos.z);
             handleLit(chunk, isDay);
         }
@@ -65,9 +76,7 @@ public class BlockLevel1LightHandler {
         chunk.findBlocks(state -> isValidDetectorBlock(state) && (state.getValue(LIT) ^ isDay),
                 (pos, output) -> {
                     chunk.setBlockState(pos, output.setValue(LIT, isDay));
-                    //LevelChunkSection section = chunk.getSection(pos.getY() >> 4);
-                    //section.setBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15, output.setValue(LIT, isDay));
-                    //section.light(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15, output.setValue(LIT, isDay));
+                    chunk.getLevel().sendBlockUpdated(pos, output, output.setValue(LIT, isDay), 2);
                 });
     }
 

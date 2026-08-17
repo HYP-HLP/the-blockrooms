@@ -139,11 +139,11 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
     /** 房间类型：石英大厅（主体）/ 石质密室 / 通廊 */
     public enum RoomType { QUARTZ_HALL, STONE_VAULT, CORRIDOR }
 
-    /** 由 (RandomState, 楼层, 区块坐标) 确定房间类型：大厅 60%、密室 15%、通廊 25% */
+    /** 由 (RandomState, 楼层, 区块坐标) 确定房间类型：大厅 70%、密室 10%、通廊 20% */
     public static RoomType roomType(RandomState randomState, int floor, int chunkX, int chunkZ) {
         double r = bl1Random(randomState, floor, chunkX, chunkZ, 1).nextDouble();
-        if (r < 0.60) return RoomType.QUARTZ_HALL;
-        if (r < 0.75) return RoomType.STONE_VAULT;
+        if (r < 0.70) return RoomType.QUARTZ_HALL;
+        if (r < 0.80) return RoomType.STONE_VAULT;
         return RoomType.CORRIDOR;
     }
 
