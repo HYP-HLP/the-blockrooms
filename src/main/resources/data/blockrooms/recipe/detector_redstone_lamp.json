@@ -1,6 +1,5 @@
 {
     "type": "blockrooms:crafting_error",
-    "category": "redstone",
     "key": {
         "G": "minecraft:glowstone",
         "Q": "minecraft:quartz",

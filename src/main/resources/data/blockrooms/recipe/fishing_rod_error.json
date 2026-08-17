@@ -1,6 +1,5 @@
 {
   "type": "blockrooms:crafting_error",
-  "category": "equipment",
   "key": {
     "#": "#c:rods/wooden",
     "X": "#c:strings"

@@ -1,6 +1,5 @@
 {
     "type": "blockrooms:crafting_error",
-    "category": "misc",
     "key": {
         "#": "#c:rods/wooden",
         "C": "minecraft:quartz",
