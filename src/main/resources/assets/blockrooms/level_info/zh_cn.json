@@ -1,0 +1,86 @@
+{
+  "blocklevel0": {
+    "title": "BlockLevel 0 - 块室之始",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "欢迎来到 Blockrooms。", "color": "#b8b8b8" },
+      { "text": "黄色的砂岩与潮湿的地毯，无限延伸的房间。", "color": "#a8a8a8" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class 1",
+      "title_color": "#EFA424",
+      "safe": "》不安全",
+      "security": "》已勘探完全",
+      "entity": "》极少量怪物生成",
+      "safe_color": "#FFBD4A",
+      "security_color": "#FFBD4A",
+      "entity_color": "#FFBD4A"
+    }
+  },
+  "blocklevel1": {
+    "title": "BlockLevel 1 - 石英大厅",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "石英基地的灯光仍然亮着。", "color": "#b8b8b8" },
+      { "text": "沿着电梯向上，也许能抵达更深的层级。", "color": "#a8a8a8" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class 1",
+      "title_color": "#EFA424",
+      "safe": "》不安全",
+      "security": "》已勘探完全",
+      "entity": "》极少量怪物生成",
+      "safe_color": "#FFBD4A",
+      "security_color": "#FFBD4A",
+      "entity_color": "#FFBD4A"
+    }
+  },
+  "blocklevel4": {
+    "title": "BlockLevel 4 - 随机种子",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "你似乎回到了主世界。", "color": "#b8b8b8" },
+      { "text": "但是这里和主世界有些不大一样……", "color": "#a8a8a8" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class 2",
+      "title_color": "#778899",
+      "safe": "》不安全",
+      "security": "》已勘探完全",
+      "entity": "》少量怪物生成",
+      "safe_color": "#708090",
+      "security_color": "#708090",
+      "entity_color": "#708090"
+    }
+  },
+  "the_gallery": {
+    "title": "画廊",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "墙壁上挂满了画作，而它们的眼睛在看着你。", "color": "#b8b8b8" },
+      { "text": "别逗留太久——这里的怪物都能看到你。", "color": "#a8a8a8" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class Unexplored",
+      "title_color": "#272727",
+      "safe": "》未知域层属性",
+      "security": "》无法勘探",
+      "entity": "》未知实体",
+      "safe_color": "#272727",
+      "security_color": "#272727",
+      "entity_color": "#272727"
+    }
+  }
+}
