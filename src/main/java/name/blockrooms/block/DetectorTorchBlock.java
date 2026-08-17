@@ -1,5 +1,6 @@
 package name.blockrooms.block;
 
+import name.blockrooms.util.ModLevels;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -41,7 +42,7 @@ public class DetectorTorchBlock extends TorchBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
-        if (!level.isClientSide() && !(level.dimension() == Level.END)) {
+        if (!level.isClientSide() && !(level.dimension() == ModLevels.BLOCKLEVEL_1)) {
             level.scheduleTick(pos, this, 1);
         }
     }

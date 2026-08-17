@@ -46,7 +46,7 @@ public abstract class ResultSlotMixin extends Slot implements ResultSlotInvoker 
     public void onTake(Player player, ItemStack stack, CallbackInfo ci) {
         if (player != null && player.containerMenu instanceof ErrorCraftingMenu
                 && player.getRandom().nextDouble() <= 0.05) {
-            player.addEffect(new MobEffectInstance(ModMobEffects.TREMBLING, 300, 2));
+            player.addEffect(new MobEffectInstance(ModMobEffects.TREMBLING, 300 * 20, 2));
         }
     }
 }

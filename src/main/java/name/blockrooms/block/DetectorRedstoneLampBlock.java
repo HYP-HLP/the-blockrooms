@@ -1,5 +1,6 @@
 package name.blockrooms.block;
 
+import name.blockrooms.util.ModLevels;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -25,7 +26,7 @@ public class DetectorRedstoneLampBlock extends RedstoneLampBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
-        if (!level.isClientSide()) {
+        if (!level.isClientSide() && !(level.dimension() == ModLevels.BLOCKLEVEL_1)) {
             level.scheduleTick(pos, this, 1);
         }
     }
@@ -38,7 +39,9 @@ public class DetectorRedstoneLampBlock extends RedstoneLampBlock {
             if (state.getValue(LIT) != shouldLit) {
                 level.setBlock(pos, state.setValue(LIT, shouldLit), UPDATE_CLIENTS);
             }
-            level.scheduleTick(pos, this, 20);
+            if (!level.isClientSide() && !(level.dimension() == ModLevels.BLOCKLEVEL_1)) {
+                level.scheduleTick(pos, this, 20);
+            }
         }
     }
 
@@ -50,6 +53,7 @@ public class DetectorRedstoneLampBlock extends RedstoneLampBlock {
         }
         level.scheduleTick(pos, this, 20);
     }
+
     public boolean calculateShouldLit(Level level, BlockPos pos) {
         if (level.hasNeighborSignal(pos)) {
             return true;

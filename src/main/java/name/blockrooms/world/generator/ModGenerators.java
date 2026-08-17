@@ -8,15 +8,16 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+@SuppressWarnings("unused")
 public class ModGenerators {
-    public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATORS = DeferredRegister.create(Registries.CHUNK_GENERATOR, Blockrooms.MODID);
-    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL0_GENERATOR =
+    private static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATORS = DeferredRegister.create(Registries.CHUNK_GENERATOR, Blockrooms.MODID);
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL0_GENERATOR =
             CHUNK_GENERATORS.register("blocklevel0_generator", () -> BlockLevel0Generator.CODEC);
-    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL1_GENERATOR =
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL1_GENERATOR =
             CHUNK_GENERATORS.register("blocklevel1_generator", () -> BlockLevel1Generator.CODEC);
-    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL4_GENERATOR =
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL4_GENERATOR =
             CHUNK_GENERATORS.register("blocklevel4_generator", () -> BlockLevel4Generator.CODEC);
-    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> GALLERY_GENERATOR =
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> GALLERY_GENERATOR =
             CHUNK_GENERATORS.register("the_gallery_generator", () -> TheGalleryGenerator.CODEC);
     public static void register(IEventBus eventBus) { CHUNK_GENERATORS.register(eventBus); }
 }
