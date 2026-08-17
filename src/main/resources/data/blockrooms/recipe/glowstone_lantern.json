@@ -1,6 +1,5 @@
 {
     "type": "blockrooms:crafting_error",
-    "category": "misc",
     "key": {
         "#": "minecraft:burn_pottery_sherd",
         "X": "#c:nuggets/iron"
