@@ -23,4 +23,6 @@ public class ModRecipeTypes {
             });
     public static final DeferredHolder<RecipeSerializer<?>, ErrorCraftingRecipe.Serializer> ERROR_CRAFTING_SERIALIZER =
             RECIPE_SERIALIZERS.register("crafting_error", ErrorCraftingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, ErrorCraftingShapelessRecipe.Serializer> ERROR_CRAFTING_SHAPELESS_SERIALIZER =
+            RECIPE_SERIALIZERS.register("crafting_error_shapeless", ErrorCraftingShapelessRecipe.Serializer::new);
 }
