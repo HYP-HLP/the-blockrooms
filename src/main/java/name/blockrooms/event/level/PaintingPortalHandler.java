@@ -17,15 +17,6 @@ import java.util.List;
 
 import static name.blockrooms.util.TeleportUtils.teleportPlayer;
 
-/**
- * 穿画传送：玩家走进画时会被传送到"画后的空间"。
- * <ul>
- *   <li>BlockLevel 0：大部分情况下是本域层中的另一部分（非欧几里得随机偏移）；
- *       罕见地（10%）到达画廊维度，落点固定为走廊中线（随机 z 几乎总会掉进走廊外的虚空）</li>
- *   <li>画廊（The Gallery）：穿过画会来到一个和普通画廊无异的地方，同时原本的画也会突然消失
- *       （复刻 wiki 设定：传送后原画消失）</li>
- * </ul>
- */
 @EventBusSubscriber
 public class PaintingPortalHandler {
     private static final double GALLERY_CHANCE = 0.05;
@@ -45,7 +36,6 @@ public class PaintingPortalHandler {
         ServerPlayer player = players.getFirst();
 
         if (inGallery) {
-            // 画廊内穿画：来到另一个"和普通画廊无异"的地方，原本的画突然消失
             painting.discard();
             int dx = level.random.nextInt(RANDOM_TELEPORT_RANGE * 2) - RANDOM_TELEPORT_RANGE;
             // 落点固定为走廊中线 z（走廊内部只有 4 格宽），随机 z 几乎总会掉进墙外的虚空
@@ -54,7 +44,6 @@ public class PaintingPortalHandler {
         }
 
         if (level.random.nextDouble() < GALLERY_CHANCE) {
-            // 罕见：穿过画到达画廊维度
             ServerLevel gallery = ((ServerLevel) level).getServer().getLevel(ModLevels.GALLERY);
             if (gallery == null) return;
             int dx = level.random.nextInt(RANDOM_TELEPORT_RANGE * 2) - RANDOM_TELEPORT_RANGE;
