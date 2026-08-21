@@ -1,6 +1,7 @@
 package name.blockrooms.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import name.blockrooms.Config;
 import name.blockrooms.block.inventory.ErrorCraftingMenu;
 import name.blockrooms.block.recipe.ModRecipeTypes;
 import name.blockrooms.effect.ModMobEffects;
@@ -45,7 +46,7 @@ public abstract class ResultSlotMixin extends Slot implements ResultSlotInvoker 
     @Inject(method = "onTake", at = @At("TAIL"), remap = false)
     public void onTake(Player player, ItemStack stack, CallbackInfo ci) {
         if (player != null && player.containerMenu instanceof ErrorCraftingMenu
-                && player.getRandom().nextDouble() <= 0.05) {
+                && player.getRandom().nextDouble() <= Config.TREMBLING_CHANCE.getAsDouble()) {
             player.addEffect(new MobEffectInstance(ModMobEffects.TREMBLING, 300 * 20, 2));
         }
     }

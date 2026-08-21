@@ -1,0 +1,41 @@
+{
+  "parent": "blockrooms:hall_exit",
+  "display": {
+    "icon": {
+      "id": "minecraft:quartz_block"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.quartz_lobby.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.quartz_lobby.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_blocklevel1": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "blockrooms:blocklevel1"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_blocklevel1"
+    ]
+  ]
+}

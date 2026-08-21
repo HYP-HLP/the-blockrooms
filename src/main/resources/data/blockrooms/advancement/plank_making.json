@@ -1,0 +1,31 @@
+{
+  "parent": "blockrooms:stick_bundle",
+  "display": {
+    "icon": {
+      "id": "minecraft:stone"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.plank_making.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.plank_making.description"
+    },
+    "background": "minecraft:textures/block/quartz_block.png",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "blockrooms:bundle_to_planks"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ]
+}

@@ -18,6 +18,9 @@ public class Config {
     public static final ModConfigSpec.IntValue RUBY_TRANS_TIME = BUILDER
             .comment(Component.translatable("blockrooms.configuration.ruby_trans_time_comment").getString())
             .defineInRange("ruby_trans_time", 60 * 20, 0, Integer.MAX_VALUE);
+    public static final ModConfigSpec.DoubleValue TREMBLING_CHANCE = BUILDER
+            .comment(Component.translatable("blockrooms.configuration.trembling_chance_comment").getString())
+            .defineInRange("trembling_chance", 0.05, 0, 1);
 
     static final ModConfigSpec SPEC = BUILDER.build();
 

@@ -1,0 +1,28 @@
+{
+  "parent": "blockrooms:abandoned_camp",
+  "display": {
+    "icon": {
+      "id": "blockrooms:error_crafting_table"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.error_crafting_table.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.error_crafting_table.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "opened": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "opened"
+    ]
+  ]
+}

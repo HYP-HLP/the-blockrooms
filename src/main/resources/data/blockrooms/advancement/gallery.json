@@ -1,0 +1,41 @@
+{
+  "parent": "blockrooms:the_beginning",
+  "display": {
+    "icon": {
+      "id": "minecraft:painting"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.gallery.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.gallery.description"
+    },
+    "background": "minecraft:block/oak_planks",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_gallery": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "blockrooms:the_gallery"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_gallery"
+    ]
+  ]
+}

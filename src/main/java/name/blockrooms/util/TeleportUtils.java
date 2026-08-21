@@ -51,7 +51,6 @@ public class TeleportUtils {
         return player.teleportTo(level, vec.x, vec.y, vec.z, Set.of(), player.getYRot(), player.getXRot(), true);
     }
 
-    /** 在目标位置附近寻找可站立的安全落点（脚下实心、上下都有空间的空气格） */
     @Nullable
     public static BlockPos findSafeSpot(Level level, BlockPos target) {
         for (int dy = -2; dy <= 3; dy++) {
@@ -75,7 +74,12 @@ public class TeleportUtils {
         STANDARD_TARGET.put(Level.OVERWORLD, pos -> new Vec3(pos.x(), 64, pos.z()));
         STANDARD_TARGET.put(Level.END, pos -> new Vec3(0, 4, 0));
         STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_0, pos -> new Vec3(pos.x(), 1, pos.z()));
-        STANDARD_TARGET.put(ModLevels.GALLERY, pos -> new Vec3(pos.x(), 1, TheGalleryGenerator.SPAWN_Z));
+        STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_1, pos -> new Vec3(pos.x(), 1, pos.z()));
+        STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_2, pos -> new Vec3(pos.x(), 1, pos.z()));
+        STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_3, pos -> new Vec3(pos.x(), 1, pos.z()));
+        STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_NULL, pos -> new Vec3(0, 1, 0));
         STANDARD_TARGET.put(ModLevels.BLOCKLEVEL_4, pos -> new Vec3(pos.x(), 64, pos.z()));
+        STANDARD_TARGET.put(ModLevels.GALLERY, pos -> new Vec3(2, 1, TheGalleryGenerator.SPAWN_Z));
+
     }
 }

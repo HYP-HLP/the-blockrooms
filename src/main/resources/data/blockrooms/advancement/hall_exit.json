@@ -1,0 +1,41 @@
+{
+  "parent": "blockrooms:the_beginning",
+  "display": {
+    "icon": {
+      "id": "minecraft:oak_door"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.hall_exit.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.hall_exit.description"
+    },
+    "background": "minecraft:block/chiseled_sandstone",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "find_oak_exit": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "blockrooms:oak_exit"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "find_oak_exit"
+    ]
+  ]
+}

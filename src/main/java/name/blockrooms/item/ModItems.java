@@ -3,6 +3,7 @@ package name.blockrooms.item;
 import name.blockrooms.Blockrooms;
 import name.blockrooms.block.ModBlocks;
 import name.blockrooms.entity.ModEntities;
+import name.blockrooms.item.consumables.DamageEffect;
 import name.blockrooms.item.impl.GlowstoneLanternItem;
 import name.blockrooms.item.impl.GunBowItem;
 import net.minecraft.core.Direction;
@@ -14,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
@@ -64,6 +66,7 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> BLOOD_ZOMBIE_SPAWN_EGG =
             ITEMS.registerItem("blood_zombie_spawn_egg", SpawnEggItem::new,
                     properties -> properties.spawnEgg(ModEntities.BLOOD_ZOMBIE.get()));
+    public static final DeferredItem<SpawnEggItem> BLACKSTONE_SHULKER_SPAWN_EGG = ITEMS.registerItem("blackstone_shulker", SpawnEggItem::new, properties -> properties.spawnEgg(ModEntities.BLACKSTONE_SHULKER.get()));
 
     public static final DeferredItem<BlockItem> HEATED_IRON_BLOCK =
             ITEMS.registerSimpleBlockItem("heated_iron_block", ModBlocks.HEATED_IRON_BLOCK);
@@ -80,10 +83,34 @@ public class ModItems {
     public static final DeferredItem<BlockItem> QUARTZ_ELEVATOR =
             ITEMS.registerSimpleBlockItem("quartz_elevator", ModBlocks.QUARTZ_ELEVATOR);
     public static final DeferredItem<BlockItem> SOFT_COBBLESTONE =
-            ITEMS.registerSimpleBlockItem("soft_cobblestone", ModBlocks.SOFT_COBBLESTONE);
-    public static final DeferredItem<BlockItem> PROCESSED_SOFT_COBBLESTONE =
-            ITEMS.registerSimpleBlockItem("processed_soft_cobblestone", ModBlocks.PROCESSED_SOFT_COBBLESTONE);
+            ITEMS.registerSimpleBlockItem("soft_cobblestone", ModBlocks.SOFT_COBBLESTONE,
+                    properties -> properties
+                            .component(DataComponents.CONSUMABLE,
+                            Consumables.defaultFood()
+                                    .onConsume(new DamageEffect(2.0f))
+                                    .build())
 
+            );
+    public static final DeferredItem<BlockItem> PROCESSED_SOFT_COBBLESTONE =
+            ITEMS.registerSimpleBlockItem("processed_soft_cobblestone", ModBlocks.PROCESSED_SOFT_COBBLESTONE,
+                    properties -> properties
+                            .food(new FoodProperties.Builder()
+                                    .nutrition(3)
+                                    .saturationModifier((float) 1 / 6)
+                                            .build(),
+                                    Consumables.defaultFood()
+                                            .onConsume(
+                                                    new ApplyStatusEffectsConsumeEffect(
+                                                            new MobEffectInstance(MobEffects.RESISTANCE, 720)
+                                                    )
+                                            )
+                                            .build()));
+    public static final DeferredItem<BlockItem> TELEPORTER_BLOCK =
+            ITEMS.registerSimpleBlockItem("teleporter_block", ModBlocks.TELEPORTER_BLOCK);
+    public static final DeferredItem<BlockItem> FALLABLE_STONE =
+            ITEMS.registerSimpleBlockItem("fallable_stone", ModBlocks.FALLABLE_STONE);
+
+    public static final DeferredItem<Item> STICK_BUNDLE = ITEMS.registerSimpleItem("stick_bundle", properties -> properties);
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

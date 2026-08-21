@@ -1,0 +1,40 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:chiseled_sandstone"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.the_beginning.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.the_beginning.description"
+    },
+    "background": "minecraft:block/chiseled_sandstone",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_blocklevel0": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "blockrooms:blocklevel0"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_blocklevel0"
+    ]
+  ]
+}

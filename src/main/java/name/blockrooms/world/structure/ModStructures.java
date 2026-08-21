@@ -24,6 +24,31 @@ public class ModStructures {
             STRUCTURE_TYPES.register("quartz_beta_base", () -> structureType(BlockLevel1BetaBaseStructure.CODEC));
     public static final DeferredHolder<StructurePieceType, StructurePieceType> BETA_BASE_PIECE_TYPE =
             STRUCTURE_PIECE_TYPES.register("quartz_beta_base_piece", () -> (StructurePieceType.ContextlessType) BlockLevel1BetaBasePiece::new);
+    public static final DeferredHolder<StructureType<?>, StructureType<OakExitStructure>> OAK_EXIT_TYPE =
+            STRUCTURE_TYPES.register("oak_exit", () -> structureType(OakExitStructure.CODEC));
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> OAK_EXIT_PIECE_TYPE =
+            STRUCTURE_PIECE_TYPES.register("oak_exit_piece", () -> (StructurePieceType.StructureTemplateType) OakExitPiece::new);
+    public static final DeferredHolder<StructureType<?>, StructureType<SpruceDoorStructure>> SPRUCE_DOOR_TYPE =
+            STRUCTURE_TYPES.register("spruce_door", () -> structureType(SpruceDoorStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<QuartzDoorStructure>> QUARTZ_DOOR_TYPE =
+            STRUCTURE_TYPES.register("quartz_door", () -> structureType(QuartzDoorStructure.CODEC));
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> BL2_DOOR_PIECE_TYPE =
+            STRUCTURE_PIECE_TYPES.register("blocklevel2_door_piece", () -> (StructurePieceType.ContextlessType) BlockLevel2DoorPiece::new);
+    public static final DeferredHolder<StructureType<?>, StructureType<AbandonedCampStructure>> ABANDONED_CAMP_TYPE =
+            STRUCTURE_TYPES.register("abandoned_camp", () -> structureType(AbandonedCampStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<BlockLevel7VillagerCottageStructure>> BL7_COTTAGE_TYPE =
+            STRUCTURE_TYPES.register("blocklevel7_villager_cottage", () -> structureType(BlockLevel7VillagerCottageStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<RaftStructure>> RAFT_TYPE =
+            STRUCTURE_TYPES.register("raft", () -> structureType(RaftStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<SeabedCaveStructure>> SEABED_CAVE_TYPE =
+            STRUCTURE_TYPES.register("seabed_cave", () -> structureType(SeabedCaveStructure.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<VoidBoatStructure>> VOID_BOAT_TYPE =
+            STRUCTURE_TYPES.register("void_boat", () -> structureType(VoidBoatStructure.CODEC));
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> NBT_TEMPLATE_PIECE_TYPE =
+            STRUCTURE_PIECE_TYPES.register("nbt_template_piece", () -> (StructurePieceType.StructureTemplateType) NbtTemplatePiece::new);
+
+    public static final DeferredHolder<StructureType<?>, StructureType<Bl3TemplateStructure>> BL3_TEMPLATE_TYPE =
+            STRUCTURE_TYPES.register("bl3_template", () -> structureType(Bl3TemplateStructure.CODEC));
 
     private static <S extends Structure> StructureType<S> structureType(MapCodec<S> codec) {
         return () -> codec;

@@ -45,85 +45,34 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.StreamSupport;
 
-/**
- * BlockLevel 1「石英大厅」生成器。
- * <p>
- * 设定要点（blockrooms wiki）：
- * <ul>
- *   <li>由各种石英建筑方块构成的<b>无限建筑迷宫</b>：石英大厅为主体，石质密室与通廊随机分布，
- *       所有区域由走廊/门洞互相连接，不存在孤立区域</li>
- *   <li>大厅规模 8×8 ~ 48×48、高度 3~6 格；天花板与地板为石英块，墙壁为石英砖，可能有画/伪画框、
- *       石英柱与柱旁的补给箱</li>
- *   <li>石质密室：石头墙与地面 + 青色地毯 + 常亮红石灯，补给箱概率更大</li>
- *   <li>通廊：雕纹石英长走廊，红石线路装饰，红石灯常亮</li>
- *   <li>昼夜循环：红石灯与火把白天亮、夜晚灭（由 {@link name.blockrooms.block.DetectorRedstoneLampBlock}
- *       与 {@link name.blockrooms.block.DetectorWallTorchBlock} 提供）</li>
- *   <li>B.M.E.G.「石英β基地」为全维度唯一结构，位置由种子确定（见 {@link #betaBaseCenter(long)}）</li>
- *   <li><b>多层迷宫</b>：世界按 8 格一层向上堆叠 32 层（0..255），每层是一张独立布局的房间网格；
- *       层间由<b>石英电梯竖井</b>连接（见 {@link #elevatorShaftCenter}）：每 4×4 区块超格、
- *       每 3 层一段恰好一根竖井，段内每层地板嵌一块 {@link name.blockrooms.block.QuartzElevatorBlock}，
- *       跳跃/潜行即可在段内上/下一层往返；段顶封死，穿越 2~3 层后必须水平移动找下一段竖井</li>
- *   <li>通廊：入口端敞口，出口端走廊内横一堵门墙（随机木门/铁门，门四周是墙只能从门穿过），
- *       门前后各一块压力板开门；走廊不再铺红石线路</li>
- * </ul>
- * <p>
- * 布局模型：每个 16×16 区块是一个房间，房间类型与内部高度由
- * (RandomState, 楼层, 区块坐标) 确定性哈希决定（每层布局独立）；四边墙壁在<b>固定本地坐标 6..8</b>
- * 开口作为门洞，相邻房间共用同一规则，门洞必然对齐、全图连通。
- * <p>
- * 随机源说明（1.21.5+ 的 fillFromNoise 不再暴露原始世界种子）：
- * 房间布局随机统一来自 {@code randomState.getOrCreateRandomFactory(...).fromSeed(salt)}，
- * 同一世界内确定一致、跨世界随种子不同；spawnOriginalMobs 阶段通过
- * {@code ServerChunkCache.randomState()} 拿到<b>同一个</b> RandomState 实例，两阶段结果完全一致。
- * <p>
- * 基地区域：fillFromNoise 直接向 {@link StructureManager} 查询结构 piece（结构 starts 先于
- * 噪声阶段生成），拿到基地 {@link StructureStart} 的 bounding box 后跳过该区域（基地只在第 0 层，
- * 上层照常生成），基地内容完全交给结构 piece 生成，两阶段顺序如何都不会互相覆盖。
- */
+
 public class BlockLevel1Generator extends BaseBlockLevelGenerator {
     public static final MapCodec<BlockLevel1Generator> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(BlockLevel1Generator::getBiomeSource)
             ).apply(instance, BlockLevel1Generator::new)
     );
-
-    /** 基地生成范围：世界中心 128 个区块（=2048 格），与 B.M.E.G. 据点一致 */
     private static final int BASE_RANGE = 128 * 16;
-    /** 基地位置的种子偏移常量（与 B.M.E.G. 据点区分） */
     private static final long BASE_SEED_XOR = 0x7F3C9E21A4B5D6E7L;
-
-    /** 房间内部高度范围 3~6 格（wiki：大厅高度居于 3 至 6 格间） */
     private static final int HEIGHT_MIN = 3;
     private static final int HEIGHT_MAX = 6;
-    /** 楼层高度：地板 y=baseY，内部到天花板 y=baseY+h+1，层顶填充到 y=baseY+8 充当上层地板 */
     private static final int FLOOR_HEIGHT = 8;
-    /** 楼层数：世界高度 256 / 每层 8 格 = 32 层 */
     private static final int FLOOR_COUNT = 32;
-
-    /** 门洞本地坐标区间（宽 3）：所有房间的墙都在该处开口，相邻房间门洞必然对齐 */
     private static final int DOOR_MIN = 6;
     private static final int DOOR_MAX = 8;
 
-    /** 大厅石英柱候选锚点（2×2 柱的角落，四角区域，不挡门洞 6..8） */
     private static final int[] PILLAR_ANCHORS = {2, 10};
 
-    /** 大厅墙内侧挂画概率 / 伪画框（物品展示框挂画布）概率 */
     private static final double PAINTING_CHANCE = 0.02;
     private static final double FAKE_FRAME_CHANCE = 0.01;
 
-    /** 电梯竖井超格大小：每 4×4 区块（64×64 格）恰好一个竖井 */
     private static final int SHAFT_GRID = 4;
-    /**
-     * 每根竖井贯通的楼层数：每根竖井只服务一段 3 层，段顶封死，
-     * 玩家穿越 2~3 层后必须水平移动去找下一段的竖井（段间竖井位置不同）
-     */
+
     private static final int FLOORS_PER_SHAFT = 3;
 
-    /** 补给箱战利品表（见 data/blockrooms/loot_table/gameplay/blocklevel1.json） */
     private static final ResourceKey<LootTable> BL1_LOOT =
             ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Blockrooms.MODID, "gameplay/blocklevel1"));
 
-    /** 房间布局随机流的命名空间（同一世界内确定一致，跨世界随种子不同） */
     private static final Identifier LAYOUT_RANDOM =
             Identifier.fromNamespaceAndPath(Blockrooms.MODID, "blocklevel1_layout");
 
@@ -149,7 +98,7 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
 
     /** 由 (RandomState, 楼层, 区块坐标) 确定房间内部高度（3~6 格） */
     private static int roomHeight(RandomState randomState, int floor, int chunkX, int chunkZ) {
-        return HEIGHT_MIN + bl1Random(randomState, floor, chunkX, chunkZ, 2).nextInt(HEIGHT_MAX - HEIGHT_MIN + 1);
+        return 5;
     }
 
     /** 区块级确定性随机：同一世界（同一 RandomState）内一致，跨世界随种子不同 */
@@ -157,14 +106,6 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
         return randomState.getOrCreateRandomFactory(LAYOUT_RANDOM)
                 .fromSeed(salt ^ (chunkX * 0x9e3779b97f4a7c15L) ^ (chunkZ * 0xdefacedddeedbeefL) ^ (floor * 0x2545f4914f6cdd1dL));
     }
-
-    /**
-     * 电梯竖井中心（世界坐标，y=0）：每 {@code SHAFT_GRID×SHAFT_GRID} 区块超格、每层段恰好一个。
-     * 位置由 (超格坐标, 层段) 决定——同一段内固定、段与段之间位置不同，
-     * 因此每根竖井只服务自己那一段（{@link #FLOORS_PER_SHAFT} 层），穿到头就得换地方找下一根。
-     * 中心落在房间内部（本地坐标 2..13），3×3 竖井不会顶到房间墙，也不破坏固定门洞；
-     * 并重掷避开通廊房间：通廊中央走廊 x=6..8 会被井壁堵死，竖井落在两侧实心区又进不去。
-     */
     private static BlockPos elevatorShaftCenter(RandomState randomState, int segment, int chunkX, int chunkZ) {
         int gridX = Math.floorDiv(chunkX, SHAFT_GRID);
         int gridZ = Math.floorDiv(chunkZ, SHAFT_GRID);
@@ -282,9 +223,7 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
 
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
-                        // 竖井格交给竖井柱体循环统一处理
                         if (hasShaft && Math.abs(minX + x - ex) <= 1 && Math.abs(minZ + z - ez) <= 1) continue;
-                        // 基地所在格（y 0..FLOOR_HEIGHT）整个跳过，内容完全交给结构 piece
                         for (int y = baseY; y <= Math.min(baseY + FLOOR_HEIGHT, getGenDepth() - 1); y++) {
                             if (box != null && box.isInside(minX + x, y, minZ + z)) continue;
                             BlockState state = resolveState(x, z, y - baseY, h, type, corridor, vault,
@@ -296,11 +235,9 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
                     }
                 }
 
-                // 大厅墙壁内侧挂昼夜火把（每层）
                 if (type == RoomType.QUARTZ_HALL) {
                     placeTorches(chunk, randomState, floor, pos.x, pos.z);
                 }
-                // 通廊：入口端敞口，出口端走廊内横一堵门墙（随机木门/铁门），门前后各一块压力板
                 if (type == RoomType.CORRIDOR) {
                     placeCorridorDoors(chunk, randomState, floor, pos.x, pos.z, h);
                 }
@@ -457,7 +394,7 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
         BlockState state = ModBlocks.DETECTOR_WALL_TORCH.get().defaultBlockState()
                 .setValue(BlockStateProperties.LIT, true)
                 .setValue(WallTorchBlock.FACING, facing);
-        chunk.setBlockState(new BlockPos(x, y, z), state, Block.UPDATE_NONE);
+        chunk.setBlockState(new BlockPos(x, y, z), state, Block.UPDATE_ALL);
     }
 
     private static void placeCorridorDoors(ChunkAccess chunk, RandomState randomState, int floor, int chunkX, int chunkZ, int roomHeight) {
@@ -472,7 +409,7 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
             for (int y = 1; y <= roomHeight; y++) {
                 if (x == 7 && (y == 1 || y == 2)) continue;
                 chunk.setBlockState(new BlockPos(x, baseY + y, wallZ),
-                        Blocks.CHISELED_QUARTZ_BLOCK.defaultBlockState(), Block.UPDATE_NONE);
+                        Blocks.CHISELED_QUARTZ_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
         plate(chunk, 7, baseY + 1, wallZ - 1);
@@ -517,8 +454,6 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
                             new BlockPos(chunkPos.getMinBlockX() + local.getX(), baseY + local.getY(), chunkPos.getMinBlockZ() + local.getZ()));
                 }
             }
-
-            // 大厅墙壁上的画 / 伪画框：每 4 层挂一次，控制实体数量
             if (floor % 4 == 0 && type == RoomType.QUARTZ_HALL) {
                 placeHallArt(worldGenRegion, randomState, baseBox, floor);
             }
@@ -607,8 +542,6 @@ public class BlockLevel1Generator extends BaseBlockLevelGenerator {
                         if (baseBox.isInside(worldPos)) continue;
 
                         if (roll < FAKE_FRAME_CHANCE) {
-                            // 伪画框：物品展示框挂画布（挂画需在主线程执行，生成阶段 setItem 会死锁，
-                            // 见 TheGalleryGenerator 注释）
                             ItemFrame frame = new ItemFrame(region.getLevel(), worldPos, dir.getOpposite());
                             region.addFreshEntity(frame);
                             region.getLevel().getServer().execute(() -> {

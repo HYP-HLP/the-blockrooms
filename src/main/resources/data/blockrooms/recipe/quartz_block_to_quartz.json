@@ -1,0 +1,11 @@
+{
+  "type": "blockrooms:crafting_error_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:quartz_block"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:quartz"
+  }
+}

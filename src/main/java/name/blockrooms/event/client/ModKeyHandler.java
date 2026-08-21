@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.lwjgl.glfw.GLFW;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ModKeyHandler {
@@ -18,14 +19,18 @@ public class ModKeyHandler {
         if (ModKeyBindings.noclippingKey.consumeClick()) {
             ClientPacketDistributor.sendToServer(new NoclipPayload());
         }
-        var player = Minecraft.getInstance().player;
-        if (player != null && player.getBlockStateOn().is(ModBlocks.QUARTZ_ELEVATOR)) {
-            if (Minecraft.getInstance().options.keyJump.consumeClick()) {
-                ClientPacketDistributor.sendToServer(new ElevatorTeleportPayload(true));
-            }
-            if (Minecraft.getInstance().options.keyShift.consumeClick()) {
-                ClientPacketDistributor.sendToServer(new ElevatorTeleportPayload(false));
-            }
+        Minecraft mc = Minecraft.getInstance();
+        var player = mc.player;
+        if (player == null || !player.getBlockStateOn().is(ModBlocks.QUARTZ_ELEVATOR)) {
+            return;
+        }
+        if (event.getAction() != GLFW.GLFW_PRESS) {
+            return;
+        }
+        if (event.getKey() == mc.options.keyJump.getKey().getValue()) {
+            ClientPacketDistributor.sendToServer(new ElevatorTeleportPayload(true));
+        } else if (event.getKey() == mc.options.keyShift.getKey().getValue()) {
+            ClientPacketDistributor.sendToServer(new ElevatorTeleportPayload(false));
         }
     }
 }

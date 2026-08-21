@@ -94,16 +94,39 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
                 int worldX = chunk.getPos().getMinBlockX() + x;
                 int worldZ = chunk.getPos().getMinBlockZ() + z;
 
-                if (new Random(worldGenRegion.getSeed() ^ (worldX * 0x9e3779b97f4a7c15L) ^ (worldZ * 0xdefacedddeedbeefL)).nextDouble() <= 0.2) {
+                if(worldX <= 1024 && worldX >= -1024 && worldZ <= 1024 && worldZ >= -1024){
                     for (int y = 1; y <= 4; y++) {
-                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(1, y, 1), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(2, y, 1), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(1, y, 2), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(2, y, 2), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(14, y, 14), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(14, y, 15), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(15, y, 14), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(15, y, 15), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(1, y, 14), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(1, y, 15), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(2, y, 14), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(2, y, 15), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(14, y, 1), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(14, y, 2), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(15, y, 1), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+                        chunk.setBlockState(new BlockPos(15, y, 2), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
                     }
                 }
+//                if (new Random(worldGenRegion.getSeed() ^ (worldX * 0x9e3779b97f4a7c15L) ^ (worldZ * 0xdefacedddeedbeefL)).nextDouble() <= 0.2) {
+//                    for (int y = 1; y <= 4; y++) {
+//                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.CHISELED_SANDSTONE.defaultBlockState(), Block.UPDATE_SUPPRESS_DROPS);
+//                    }
+//                }
+
+
+
+
             }
         }
 
         long seed = worldGenRegion.getSeed();
-        // 变异区域：部分灯熄灭 / 地毯断开 / 天花板大洞
         applyVariantRegions(seed, chunk);
         // B.M.E.G. 据点已注册为结构（blockrooms:bmeg_outpost），在 FEATURES 阶段生成，可用 /locate 寻找
     }
@@ -118,7 +141,6 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
         return 0;
     }
 
-    /** 由维度种子派生的唯一 B.M.E.G. 据点位置，限定在世界中心 128 个区块（2048 格）内 */
     public static BlockPos outpostCenter(long seed) {
         Random random = new Random(seed ^ OUTPOST_SEED_XOR);
         int x = random.nextInt(STRUCTURE_RANGE * 2) - STRUCTURE_RANGE;
@@ -126,12 +148,6 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
         return new BlockPos(x, 2, z);
     }
 
-    /**
-     * 变异区域后处理：
-     * - 部分红石灯熄灭（并撤掉上方充能的红石块）
-     * - 部分区域地毯断开，露出橡木地板
-     * - 天花板暴露出 2x2 大洞，洞后为基岩
-     */
     private static void applyVariantRegions(long seed, ChunkAccess chunk) {
         int chunkX = chunk.getPos().x;
         int chunkZ = chunk.getPos().z;
@@ -162,7 +178,6 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
         }
 
         if (ceilingHole) {
-            // 随机位置挖出 2x2 的天花板大洞，露出洞后方的基岩
             int holeX = random.nextInt(14);
             int holeZ = random.nextInt(14);
             for (int dx = 0; dx < 2; dx++) {
@@ -177,10 +192,6 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
             }
         }
     }
-
-    /**
-     * 在墙上随机生成画（原版 1x1 画实体），挂在 y=2..3 的墙上。
-     */
     private static void placePaintings(WorldGenRegion region) {
         ChunkAccess chunk = region.getChunk(region.getCenter().x, region.getCenter().z);
         List<Holder<PaintingVariant>> smallVariants = StreamSupport.stream(region.registryAccess()
@@ -219,9 +230,6 @@ public class BlockLevel0Generator extends BaseBlockLevelGenerator {
 
                         Optional<Holder<PaintingVariant>> variant = Util.getRandomSafe(smallVariants, region.getRandom());
                         if (variant.isEmpty()) continue;
-                        // 画实体必须以画占据的空气格为位置（面朝房间），
-                        // 不能以墙格为位置：原版 survives() 会检测该格的碰撞盒与后方墙面，
-                        // 以墙格为位置会导致每 tick 判定不存活而掉落成物品
                         Painting painting = new Painting(region.getLevel(),
                                 new BlockPos(minBlockX + x, y, minBlockZ + z), dir.getOpposite(), variant.get());
                         region.addFreshEntity(painting);

@@ -1,0 +1,35 @@
+{
+  "parent": "blockrooms:error_crafting_table",
+  "display": {
+    "icon": {
+      "id": "blockrooms:glowstone_lantern"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.moving_light.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.moving_light.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "blockrooms:glowstone_lantern"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

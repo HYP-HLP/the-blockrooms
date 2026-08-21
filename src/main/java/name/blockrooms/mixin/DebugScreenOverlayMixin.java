@@ -23,8 +23,8 @@ public abstract class DebugScreenOverlayMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void render(GuiGraphics guiGraphics, CallbackInfo ci) {
-        if (minecraft.level != null){
-            if (ModLevels.isInBlockrooms(minecraft.level.dimension())){
+        if (minecraft.level != null && minecraft.player != null){
+            if (ModLevels.isInBlockrooms(minecraft.level.dimension()) && !minecraft.player.isCreative()){
                 ci.cancel();
                 invokeRenderLines(guiGraphics, List.of(Component.translatable("gui.in_blockrooms").getString()), true);
             }
