@@ -31,10 +31,14 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DETECTOR_TORCH);
                         output.accept(ModItems.DETECTOR_REDSTONE_LAMP);
                         output.accept(ModItems.QUARTZ_ELEVATOR);
+                        output.accept(ModItems.TELEPORTER_BLOCK);
                         output.accept(ModItems.GUNBOW);
                         output.accept(ModItems.GLOWSTONE_LANTERN);
-
+                        output.accept(ModItems.SOFT_COBBLESTONE);
+                        output.accept(ModItems.PROCESSED_SOFT_COBBLESTONE);
+                        output.accept(ModItems.STICK_BUNDLE);
                         output.accept(ModItems.BLOOD_ZOMBIE_SPAWN_EGG);
+                        output.accept(ModItems.BLACKSTONE_SHULKER_SPAWN_EGG);
                     })
                     .build());
     public static void register(IEventBus eventBus) {

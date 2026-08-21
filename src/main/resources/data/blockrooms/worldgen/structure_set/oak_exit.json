@@ -1,0 +1,14 @@
+{
+    "structures": [
+        {
+            "structure": "blockrooms:oak_exit",
+            "weight": 1
+        }
+    ],
+    "placement": {
+        "type": "minecraft:random_spread",
+        "spacing": 1,
+        "separation": 0,
+        "salt": 441771
+    }
+}

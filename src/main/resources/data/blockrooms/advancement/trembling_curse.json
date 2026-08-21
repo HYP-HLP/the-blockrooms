@@ -1,0 +1,33 @@
+{
+  "parent": "blockrooms:error_crafting_table",
+  "display": {
+    "icon": {
+      "id": "blockrooms:error_crafting_table"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.trembling_curse.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.trembling_curse.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "trembling": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "blockrooms:trembling": {}
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "trembling"
+    ]
+  ]
+}

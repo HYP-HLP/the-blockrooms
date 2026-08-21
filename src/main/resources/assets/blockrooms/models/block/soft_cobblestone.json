@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/cube_all",
     "textures": {
-        "all": "blockrooms:block/soft_cobblestone"
+        "all": "minecraft:block/cobblestone"
     }
 }

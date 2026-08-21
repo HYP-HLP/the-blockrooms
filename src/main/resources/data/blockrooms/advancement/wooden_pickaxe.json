@@ -1,0 +1,35 @@
+{
+  "parent": "blockrooms:plank_making",
+  "display": {
+    "icon": {
+      "id": "minecraft:wood_pickaxe"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.wooden_pickaxe.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.wooden_pickaxe.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:wooden_pickaxe"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

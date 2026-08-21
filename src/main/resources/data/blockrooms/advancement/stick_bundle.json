@@ -1,0 +1,35 @@
+{
+  "parent": "blockrooms:ladder_disassemble",
+  "display": {
+    "icon": {
+      "id": "blockrooms:stick_bundle"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.stick_bundle.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.stick_bundle.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "blockrooms:stick_bundle"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

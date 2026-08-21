@@ -2,9 +2,11 @@ package name.blockrooms.block;
 
 import name.blockrooms.Blockrooms;
 import name.blockrooms.block.inventory.ErrorCraftingMenu;
+import name.blockrooms.item.FallableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -90,5 +92,22 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
                     .strength(2.0F, 6.0F)
+    );
+    /** 能下落的石头方块（沙子式下落，继承 SandBlock） */
+    public static final DeferredBlock<FallableBlock> FALLABLE_STONE = BLOCKS.registerBlock(
+            "fallable_stone",
+            properties -> new FallableBlock(new ColorRGBA(0xFF9C9C9C), properties),
+            properties -> properties.mapColor(MapColor.STONE)
+                    .requiresCorrectToolForDrops()
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(1.5F, 6.0F)
+    );
+    public static final DeferredBlock<TeleporterBlock> TELEPORTER_BLOCK = BLOCKS.registerBlock(
+            "teleporter_block", TeleporterBlock::new,
+            properties -> properties.mapColor(MapColor.COLOR_BLACK)
+                    .noCollision()
+                    .instabreak()
+                    .pushReaction(PushReaction.DESTROY)
+                    .sound(SoundType.STONE)
     );
 }

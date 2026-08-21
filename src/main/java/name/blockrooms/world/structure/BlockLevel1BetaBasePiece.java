@@ -25,15 +25,8 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jspecify.annotations.NonNull;
 
-/**
- * B.M.E.G.「石英β基地」结构片段：13×13 石英围墙小基地。
- * <p>
- * 与 B.M.E.G. 据点（BlockLevel 0）同款模式：位置由种子确定（每世界唯一）、代码生成 piece。
- * 内部高 4 格（y=1..4），屋顶 y=5（中央嵌常亮红石灯），y=6..8 基岩封顶，
- * 与骨架封顶层（y=0..8）范围一致，基地内完全由本 piece 提供方块。
- */
 public class BlockLevel1BetaBasePiece extends StructurePiece {
-    /** 基地半径：总尺寸 13×13（可被生成 chunk 的 3×3 邻域完整覆盖） */
+
     public static final int HALF = 6;
 
     private static final ResourceKey<LootTable> BASE_LOOT =
@@ -50,7 +43,6 @@ public class BlockLevel1BetaBasePiece extends StructurePiece {
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
-        // 位置信息已由基类序列化的边界框承载，无需额外数据
     }
 
     @Override

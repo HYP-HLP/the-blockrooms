@@ -15,7 +15,11 @@ public class ModLevels {
 
     public static final ResourceKey<Level> BLOCKLEVEL_0 = level("blocklevel0");
     public static final ResourceKey<Level> BLOCKLEVEL_1 = level("blocklevel1");
+    public static final ResourceKey<Level> BLOCKLEVEL_2 = level("blocklevel2");
+    public static final ResourceKey<Level> BLOCKLEVEL_3 = level("blocklevel3");
     public static final ResourceKey<Level> BLOCKLEVEL_4 = level("blocklevel4");
+    /** 空值之室（Level Null）：虚空中的石头平台 */
+    public static final ResourceKey<Level> BLOCKLEVEL_NULL = level("blocklevel_null");
     public static final ResourceKey<Level> GALLERY = level("the_gallery");
 
     public static boolean isInBlockrooms(ResourceKey<Level> key){

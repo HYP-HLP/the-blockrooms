@@ -1,0 +1,31 @@
+{
+  "parent": "blockrooms:error_crafting_table",
+  "display": {
+    "icon": {
+      "id": "minecraft:ladder"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.ladder_disassemble.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.ladder_disassemble.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "blockrooms:ladder_to_sticks"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ]
+}

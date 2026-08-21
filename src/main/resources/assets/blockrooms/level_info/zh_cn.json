@@ -41,6 +41,28 @@
       "entity_color": "#FFBD4A"
     }
   },
+  "blocklevel2": {
+    "title": "BlockLevel 2 - 隧道",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "石砖与陶瓦构成的隧道迷宫。", "color": "#b8b8b8" },
+      { "text": "待在红石火把附近——黑暗里潜伏着怪物。", "color": "#a8a8a8" },
+      { "text": "小心机器的热量，以及盛开着凋零玫瑰的花盆。", "color": "#989898" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class 3",
+      "title_color": "#f44336",
+      "safe": "》不安全",
+      "security": "》不稳定",
+      "entity": "》实体数量较多",
+      "safe_color": "#ff9800",
+      "security_color": "#ff9800",
+      "entity_color": "#f44336"
+    }
+  },
   "blocklevel4": {
     "title": "BlockLevel 4 - 随机种子",
     "title_color": "#e8e8e8",

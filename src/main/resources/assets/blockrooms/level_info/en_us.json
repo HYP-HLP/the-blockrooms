@@ -41,6 +41,28 @@
       "entity_color": "#FFBD4A"
     }
   },
+  "blocklevel2": {
+    "title": "BlockLevel 2 - The Tunnels",
+    "title_color": "#e8e8e8",
+    "lines": [
+      { "text": "A maze of stone brick and terracotta tunnels.", "color": "#b8b8b8" },
+      { "text": "Stay near the redstone torches - the darkness holds monsters.", "color": "#a8a8a8" },
+      { "text": "Beware the heat of the machines, and the flowers that bloom with death.", "color": "#989898" }
+    ],
+    "type_speed": 2,
+    "line_delay": 12,
+    "hold_ticks": 80,
+    "difficulty": {
+      "title": "Class 3",
+      "title_color": "#f44336",
+      "safe": "》Unsafe",
+      "security": "》Unstable",
+      "entity": "》High entity count",
+      "safe_color": "#ff9800",
+      "security_color": "#ff9800",
+      "entity_color": "#f44336"
+    }
+  },
   "blocklevel4": {
     "title": "BlockLevel 4 - Random Seed",
     "title_color": "#e8e8e8",

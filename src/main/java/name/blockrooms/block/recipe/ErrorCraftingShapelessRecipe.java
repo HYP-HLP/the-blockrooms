@@ -36,9 +36,21 @@ public class ErrorCraftingShapelessRecipe extends ShapelessRecipe {
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
+    public ItemStack resultItem() {
+        return result;
+    }
+
+    /** 1.21.11 的 ShapelessRecipe 没有 getIngredients()，这里显式暴露（供 JEI 布局等使用）。 */
+    public List<Ingredient> ingredients() {
+        return this.ingredients;
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public RecipeSerializer<ShapelessRecipe> getSerializer() {
-        return RecipeSerializer.SHAPELESS_RECIPE;
+        // 同 ErrorCraftingRecipe：必须返回 mod 自己的 serializer，否则网络同步时
+        // 客户端会用原版 ShapelessRecipe.Serializer 解码，配方类型退化为 minecraft:crafting
+        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) ModRecipeTypes.ERROR_CRAFTING_SHAPELESS_SERIALIZER.get();
     }
 
     @Override

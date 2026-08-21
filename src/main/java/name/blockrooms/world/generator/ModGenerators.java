@@ -19,5 +19,11 @@ public class ModGenerators {
             CHUNK_GENERATORS.register("blocklevel4_generator", () -> BlockLevel4Generator.CODEC);
     private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> GALLERY_GENERATOR =
             CHUNK_GENERATORS.register("the_gallery_generator", () -> TheGalleryGenerator.CODEC);
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL2_GENERATOR =
+            CHUNK_GENERATORS.register("blocklevel2_generator", () -> BlockLevel2Generator.CODEC);
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> BL3_GENERATOR =
+            CHUNK_GENERATORS.register("blocklevel3_generator", () -> BlockLevel3Generator.CODEC);
+    private static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> NULL_GENERATOR =
+            CHUNK_GENERATORS.register("blocklevel_null_generator", () -> BlockLevelNullGenerator.CODEC);
     public static void register(IEventBus eventBus) { CHUNK_GENERATORS.register(eventBus); }
 }

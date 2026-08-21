@@ -1,0 +1,28 @@
+{
+  "parent": "blockrooms:quartz_lobby",
+  "display": {
+    "icon": {
+      "id": "blockrooms:blood_zombie_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.blockrooms.lights_out.title"
+    },
+    "description": {
+      "translate": "advancements.blockrooms.lights_out.description"
+    },
+    "background": "minecraft:block/quartz_block",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "night": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "night"
+    ]
+  ]
+}

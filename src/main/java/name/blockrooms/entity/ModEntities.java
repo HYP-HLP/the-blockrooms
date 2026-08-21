@@ -30,6 +30,16 @@ public class ModEntities {
                     EntityType.Builder.of(BloodZombie::new, MobCategory.MONSTER)
                             .sized(0.6F, 1.95F)
                             .build(entityId(id)));
+    public static final DeferredHolder<EntityType<?>, EntityType<EnhancedSkeleton>> SKELETON = ENTITY_TYPES.register("skeleton", id -> EntityType.Builder.of(EnhancedSkeleton::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
+            .build(entityId(id)));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<BlackstoneShulker>> BLACKSTONE_SHULKER =
+            ENTITY_TYPES.register("blackstone_shulker", id ->
+                    EntityType.Builder.of(BlackstoneShulker::new, MobCategory.MONSTER)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(10)
+                            .build(entityId(id)));
 
 
     public static void register(IEventBus bus){

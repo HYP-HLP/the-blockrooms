@@ -15,9 +15,17 @@ public class ErrorCraftingRecipe extends ShapedRecipe {
         this.result = result;
     }
 
+    /** 合成产物（1.21.11 移除了 Recipe.getResultItem，这里显式暴露）。 */
+    public ItemStack resultItem() {
+        return result;
+    }
+
     @Override
     public RecipeSerializer<? extends ShapedRecipe> getSerializer() {
-        return super.getSerializer();
+        // 必须返回 mod 自己的 serializer：Recipe.STREAM_CODEC 按 serializer id 编解码，
+        // 若返回原版 SHAPED_RECIPE，网络同步时客户端会用原版 ShapedRecipe.Serializer 解码，
+        // 得到原版 ShapedRecipe（getType()=minecraft:crafting），错误配方会被塞进原版「合成」分类
+        return ModRecipeTypes.ERROR_CRAFTING_SERIALIZER.get();
     }
 
     @Override
