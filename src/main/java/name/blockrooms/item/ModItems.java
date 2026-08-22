@@ -62,11 +62,15 @@ public class ModItems {
             ITEMS.registerItem("glowstone_lantern", p -> new GlowstoneLanternItem(p, 20),
                     properties -> properties.stacksTo(1).repairable(tag("repairs_glowstone_lantern")).durability(432)
                             .component(DataComponents.BREAK_SOUND, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.FIRE_EXTINGUISH)));
+    public static final DeferredItem<Item> STICK_BUNDLE =
+            ITEMS.registerSimpleItem("stick_bundle");
 
     public static final DeferredItem<SpawnEggItem> BLOOD_ZOMBIE_SPAWN_EGG =
             ITEMS.registerItem("blood_zombie_spawn_egg", SpawnEggItem::new,
                     properties -> properties.spawnEgg(ModEntities.BLOOD_ZOMBIE.get()));
-    public static final DeferredItem<SpawnEggItem> BLACKSTONE_SHULKER_SPAWN_EGG = ITEMS.registerItem("blackstone_shulker", SpawnEggItem::new, properties -> properties.spawnEgg(ModEntities.BLACKSTONE_SHULKER.get()));
+    public static final DeferredItem<SpawnEggItem> BLACKSTONE_SHULKER_SPAWN_EGG =
+            ITEMS.registerItem("blackstone_shulker", SpawnEggItem::new,
+                    properties -> properties.spawnEgg(ModEntities.BLACKSTONE_SHULKER.get()));
 
     public static final DeferredItem<BlockItem> HEATED_IRON_BLOCK =
             ITEMS.registerSimpleBlockItem("heated_iron_block", ModBlocks.HEATED_IRON_BLOCK);
@@ -110,7 +114,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> FALLABLE_STONE =
             ITEMS.registerSimpleBlockItem("fallable_stone", ModBlocks.FALLABLE_STONE);
 
-    public static final DeferredItem<Item> STICK_BUNDLE = ITEMS.registerSimpleItem("stick_bundle", properties -> properties);
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

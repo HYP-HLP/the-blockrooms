@@ -13,12 +13,14 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class VoidHandler {
     @SubscribeEvent
     public static void onEntityTick(PlayerTickEvent.Pre event) {
-        if(event.getEntity() instanceof ServerPlayer sp){
-            if(ModLevels.isInBlockrooms(sp.level().dimension())){
-                if(sp.getY() < sp.level().getMinY() - 32){
-                    if( !sp.level().dimension().equals(ModLevels.BLOCKLEVEL_NULL)) TeleportUtils.teleportPlayer(sp, ModLevels.BLOCKLEVEL_NULL);
-                    else{
-                        if(sp.getItemBySlot(EquipmentSlot.BODY).is(Items.ELYTRA)){
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            if (ModLevels.isInBlockrooms(sp.level().dimension())) {
+                if (sp.getY() < sp.level().getMinY() - 32) {
+                    if (!sp.level().dimension().equals(ModLevels.BLOCKLEVEL_NULL)) {
+                        TeleportUtils.teleportPlayer(sp, ModLevels.BLOCKLEVEL_NULL);
+                    }
+                    else {
+                        if (sp.getItemBySlot(EquipmentSlot.BODY).is(Items.ELYTRA)) {
                             TeleportUtils.teleportPlayer(sp, ModLevels.BLOCKLEVEL_1);
                         } else {
                             TeleportUtils.teleportPlayer(sp, ModLevels.BLOCKLEVEL_0);
